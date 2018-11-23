@@ -1,89 +1,97 @@
 package opengl.debug;
 
-import static opengl.debug.LoggerLevel.*;
+import static opengl.debug.LoggerLevel.DEBUG;
+import static opengl.debug.LoggerLevel.ERROR;
+import static opengl.debug.LoggerLevel.FATAL;
+import static opengl.debug.LoggerLevel.INFO;
+import static opengl.debug.LoggerLevel.VERBOSE;
+import static opengl.debug.LoggerLevel.WARNING;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class Logger {
 	
-	private static LoggerLevel level = DEBUG;
+	private static LoggerLevel level = INFO;
 	
-	private static SimpleDateFormat format = new SimpleDateFormat("-dd/MM/yyyy-HH:mm:ss-", Locale.GERMAN);
+	private static SimpleDateFormat format = new SimpleDateFormat("-dd-MM-yyyy_HH-mm-ss", Locale.GERMAN);
 
-	private static PrintWriter verboseOut;
-	private static PrintWriter standardOut = new PrintWriter(System.out);
+	private static PrintStream verboseOut;
+	private static PrintStream standardOut = System.out;
 	
 	static {
 		try {
-			verboseOut = new PrintWriter(new File("logs/log" + format.format(new Date()) + ".txt"));
+			if (!new File("logs").isDirectory()) new File("logs").mkdir();
+			verboseOut = new PrintStream(new File("logs/log" + format.format(new Date()) + "-full.txt"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void setVerboseOutput(PrintWriter writer) {
+	public static void setVerboseOutput(PrintStream writer) {
 		verboseOut = writer;
 	}
 	
-	public void setStandardOut(PrintWriter writer) {
+	public static void setStandardOut(PrintStream writer) {
 		standardOut = writer;
 	}
 	
-	private void log(LoggerLevel level, String module, String msg) {
+	private static void log(LoggerLevel level, String module, String msg) {
 		verboseOut.println(level + module + " " + msg);
-		if (level.ordinal() >= Logger.level.ordinal()) standardOut.println(level + "[" + module + "] " + msg);
+		if (level.ordinal() >= Logger.level.ordinal()) {
+			standardOut.println(level + module + " " + msg);
+		}
 	}
 	
-	public void fatal(String module, String msg) {
-		log(FATAL, "[" + module + "]", msg);
+	public static void fatal(String module, String msg) {
+		log(FATAL, module != "" ? "[" + module + "]" : "", msg);
 	}
 	
-	public void fatal(String msg) {
+	public static void fatal(String msg) {
 		log(FATAL, "", msg);
 	}
 	
-	public void error(String module, String msg) {
-		log(ERROR, "[" + module + "]", msg);
+	public static void error(String module, String msg) {
+		log(ERROR, module != "" ? "[" + module + "]" : "", msg);
 	}
 	
-	public void error(String msg) {
+	public static void error(String msg) {
 		log(ERROR, "", msg);
 	}
 	
-	public void warning(String module, String msg) {
-		log(WARNING, "[" + module + "]", msg);
+	public static void warning(String module, String msg) {
+		log(WARNING, module != "" ? "[" + module + "]" : "", msg);
 	}
 	
-	public void warning(String msg) {
+	public static void warning(String msg) {
 		log(WARNING, "", msg);
 	}
 	
-	public void info(String module, String msg) {
-		log(INFO, "[" + module + "]", msg);
+	public static void info(String module, String msg) {
+		log(INFO, module != "" ? "[" + module + "]" : "", msg);
 	}
 	
-	public void info(String msg) {
+	public static void info(String msg) {
 		log(INFO, "", msg);
 	}
 	
-	public void debug(String module, String msg) {
-		log(DEBUG, "[" + module + "]", msg);
+	public static void debug(String module, String msg) {
+		log(DEBUG, module != "" ? "[" + module + "]" : "", msg);
 	}
 	
-	public void debug(String msg) {
+	public static void debug(String msg) {
 		log(DEBUG, "", msg);
 	}
 	
-	public void verbose(String module, String msg) {
-		log(VERBOSE, "[" + module + "]", msg);
+	public static void verbose(String module, String msg) {
+		log(VERBOSE, module != "" ? "[" + module + "]" : "", msg);
 	}
 	
-	public void verbose(String msg) {
+	public static void verbose(String msg) {
 		log(VERBOSE, "", msg);
 	}
 	

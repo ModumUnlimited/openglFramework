@@ -25,4 +25,12 @@ public class Window {
 		this.data[WINDOW_HEIGHT] = height;
 	}
 	
+	public Window(String title, int width, int height) {
+		this(title, width, height, false);
+	}
+	
+	public String getTitle() {
+		return new String(title);
+	}
+	
 }

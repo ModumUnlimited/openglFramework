@@ -15,8 +15,6 @@ import java.util.Locale;
 public class Logger {
 	
 	private LoggerLevel level = INFO;
-	
-	private static SimpleDateFormat format = new SimpleDateFormat("HH-mm-ss", Locale.GERMAN);
 
 	private PrintStream standardOut = System.out;
 	
@@ -38,7 +36,7 @@ public class Logger {
 	
 	private void log(LoggerLevel level, String module, String msg) {
 		if (level.ordinal() >= this.level.ordinal()) {
-			standardOut.println("[" + format.format(new Date()) + "]" + level + module + " " + msg);
+			standardOut.println(level + module + " " + msg);
 		}
 	}
 	

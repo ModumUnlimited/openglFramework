@@ -61,8 +61,10 @@ public class Window {
 		stdOut = new Logger(System.out);
 		stdOut.setLevel(LoggerLevel.INFO);
 		try {
+			File logs = new File("logs");
+			if (!logs.exists()) logs.mkdir();
 			fileOut = new Logger(new PrintStream(new File("logs/log-" +
-										new SimpleDateFormat("dd-MM-yyyy").format(new Date()) + ".log")));
+										new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(new Date()) + ".log")));
 			fileOut.setLevel(LoggerLevel.VERBOSE);
 		} catch (FileNotFoundException e) {
 			error(Module.CORE, "Could not create logfile: " + e.getMessage());
@@ -74,6 +76,7 @@ public class Window {
 		tRend = new RendererThread(this, renderer);
 		tUpdate = new UpdaterThread(this, updater);
 		this.ref = new Reference();
+		info(CORE, "Successfully created Window Object!");
 	}
 	
 	public Window(String title, int width, int height) {
@@ -86,6 +89,7 @@ public class Window {
 	}
 	
 	public void open() {
+		info(CORE, "Opening window...");
 		running = true;
 		tUpdate.start();
 		tRend.start();
@@ -162,10 +166,11 @@ class UpdaterThread extends Thread implements Runnable {
 	@Override
 	public void run() {
 		
-		while (window.running) {
+		while (!glfwWindowShouldClose(window.window)) {
 			updater.updateAll(window);
 			window.syncUpdater();
 		}
+		window.running = false;
 		
 	}
 	

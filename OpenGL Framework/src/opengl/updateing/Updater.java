@@ -21,7 +21,13 @@ public class Updater {
 	
 	HashMap<UUID, IUpdatable> attached;
 	
-
+	/**
+	 * Creates a new Updater object with no attached objects
+	 */
+	public Updater() {
+		attached = new HashMap<>();
+	}
+	
 	/**
 	 * Attaches an updatable object to the updater. This results in
 	 * the updatable object to be scheduled for updating every time

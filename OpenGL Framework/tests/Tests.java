@@ -7,6 +7,7 @@ public class Tests {
 	@Test
 	public void testOpenWindow() {
 		Window window = new Window("Test Window", 800, 600);
+		window.open();
 	}
 	
 }

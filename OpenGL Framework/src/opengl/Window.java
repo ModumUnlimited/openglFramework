@@ -62,7 +62,6 @@ public class Window {
 	}
 	
 	
-	
 	public static String getTitle() {
 		return new String(title);
 	}

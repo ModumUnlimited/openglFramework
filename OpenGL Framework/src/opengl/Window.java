@@ -1,11 +1,9 @@
 package opengl;
 
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryUtil.*;
 import static opengl.Reference.*;
-import static opengl.Module.CORE;
+import static opengl.Module.*;
 import static opengl.errors.Errors.*;
 
 import java.io.File;
@@ -18,6 +16,7 @@ import java.util.Date;
 import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
 import opengl.rendering.Renderer;
+import opengl.updateing.Updater;
 
 public class Window {
 	
@@ -29,9 +28,13 @@ public class Window {
 	public Logger fileOut;
 	
 	private static boolean init;
+	protected boolean running;
 	private long lastSync;
 	
+	public Reference ref;
+	
 	private Renderer renderer;
+	private Updater updater;
 	
 	static {
 		init = glfwInit();
@@ -62,6 +65,9 @@ public class Window {
 		}
 		lastSync = System.currentTimeMillis();
 		renderer = new Renderer();
+		updater = new Updater();
+		this.ref = new Reference();
+		running = true;
 	}
 	
 	public Window(String title, int width, int height) {
@@ -69,13 +75,13 @@ public class Window {
 	}
 	
 	public void setFramerate(float fps) {
-		if (fps == 0) this.ref.state[REFRESH_DELAY] = 0;
-		else this.ref.state[REFRESH_DELAY] = Math.round(1000.0f/fps);
+		if (fps == 0) this.ref.state[FRAMERATE] = 0;
+		else this.ref.state[FRAMERATE] = Math.round(1000.0f/fps);
 	}
 	
-	private void sync() {
+	private void syncRenderer() {
 		long now = System.currentTimeMillis();
-		long d = this.ref.state[REFRESH_DELAY] - (now - this.lastSync);
+		long d = this.ref.state[FRAMERATE] - (now - this.lastSync);
 		if (d > 0) try {
 			Thread.sleep(d);
 		} catch (InterruptedException e) {
@@ -84,17 +90,6 @@ public class Window {
 		this.lastSync = now;
 	}
 	
-	public void open() {
-		
-		while (!glfwWindowShouldClose(window)) {
-			render();
-		}
-		
-	}
-	
-	public void update() {
-		
-	}
 	public void render() {
 		renderer.renderAll(window);
 	}
@@ -131,6 +126,27 @@ public class Window {
 	public void verbose(IModule module, String msg) {
 		if (fileOut != null) fileOut.verbose(module.name(), msg);
 		stdOut.verbose(module.name(), msg);
+	}
+	
+}
+
+class UpdaterThread extends Thread implements Runnable {
+	
+	private Window window;
+	private Updater updater;
+	
+	public UpdaterThread(Window window, Updater updater) {
+		this.window = window;
+		this.updater = updater;
+	}
+	
+	@Override
+	public void run() {
+		
+		while (window.running) {
+			updater.
+		}
+		
 	}
 	
 }

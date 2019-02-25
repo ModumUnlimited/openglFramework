@@ -11,5 +11,6 @@ public class Reference {
 
 	public static final int WINDOW_WIDTH = 0;
 	public static final int WINDOW_HEIGHT = 1;
-	public static final int REFRESH_DELAY = 2;
+	public static final int FRAMERATE = 2;
+	public static final int TICKRATE = 3;
 }

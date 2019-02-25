@@ -65,7 +65,7 @@ public class Renderer {
 		glClear(clearMask);
 		
 		for (IRenderable r : attached.values()) {
-			r.render();
+			r.render(window);
 		}
 		
 		glfwSwapBuffers(window);

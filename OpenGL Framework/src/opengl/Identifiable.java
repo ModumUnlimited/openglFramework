@@ -9,7 +9,7 @@ import java.util.UUID;
  * @author Linus Vogel <linvogel@student.ethz.ch>
  *
  */
-public final class Identifiable {
+public class Identifiable {
 	
 	private final UUID uuid = UUID.randomUUID();
 
@@ -18,7 +18,7 @@ public final class Identifiable {
 	 * A known user of this method is the Renderer class.
 	 * @return
 	 */
-	public UUID getUUID() {
+	public final UUID getUUID() {
 		return uuid;
 	}
 

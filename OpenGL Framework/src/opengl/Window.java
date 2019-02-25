@@ -61,7 +61,7 @@ public class Window {
 		stdOut = new Logger(System.out);
 		stdOut.setLevel(LoggerLevel.INFO);
 		try {
-			fileOut = new Logger(new PrintStream(new File("log-" +
+			fileOut = new Logger(new PrintStream(new File("logs/log-" +
 										new SimpleDateFormat("dd-MM-yyyy").format(new Date()) + ".log")));
 			fileOut.setLevel(LoggerLevel.VERBOSE);
 		} catch (FileNotFoundException e) {

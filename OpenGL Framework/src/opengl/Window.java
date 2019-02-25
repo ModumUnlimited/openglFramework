@@ -20,7 +20,7 @@ import opengl.updateing.Updater;
 
 public class Window {
 	
-	private final long window;
+	protected final long window;
 	
 	private String title;
 	
@@ -29,12 +29,16 @@ public class Window {
 	
 	private static boolean init;
 	protected boolean running;
-	private long lastSync;
+	private long lastSyncRenderer;
+	private long lastSyncTick;
 	
 	public Reference ref;
 	
 	private Renderer renderer;
 	private Updater updater;
+	
+	private RendererThread tRend;
+	private UpdaterThread tUpdate;
 	
 	static {
 		init = glfwInit();
@@ -52,8 +56,8 @@ public class Window {
 		}
 		this.ref = new Reference();
 		this.title = title;
-		this.ref.state[WINDOW_WIDTH] = width;
-		this.ref.state[WINDOW_HEIGHT] = height;
+		this.ref.WINDOW_WIDTH = width;
+		this.ref.WINDOW_HEIGHT = height;
 		stdOut = new Logger(System.out);
 		stdOut.setLevel(LoggerLevel.INFO);
 		try {
@@ -63,11 +67,13 @@ public class Window {
 		} catch (FileNotFoundException e) {
 			error(Module.CORE, "Could not create logfile: " + e.getMessage());
 		}
-		lastSync = System.currentTimeMillis();
+		lastSyncRenderer = System.currentTimeMillis();
+		lastSyncTick = System.currentTimeMillis();
 		renderer = new Renderer();
 		updater = new Updater();
+		tRend = new RendererThread(this, renderer);
+		tUpdate = new UpdaterThread(this, updater);
 		this.ref = new Reference();
-		running = true;
 	}
 	
 	public Window(String title, int width, int height) {
@@ -75,23 +81,36 @@ public class Window {
 	}
 	
 	public void setFramerate(float fps) {
-		if (fps == 0) this.ref.state[FRAMERATE] = 0;
-		else this.ref.state[FRAMERATE] = Math.round(1000.0f/fps);
+		if (fps == 0) this.ref.FRAMERATE = 0;
+		else this.ref.FRAMERATE = Math.round(1000f/fps);
 	}
 	
-	private void syncRenderer() {
+	public void open() {
+		running = true;
+		tUpdate.start();
+		tRend.start();
+	}
+	
+	protected void syncRenderer() {
 		long now = System.currentTimeMillis();
-		long d = this.ref.state[FRAMERATE] - (now - this.lastSync);
+		long d = this.ref.FRAMERATE - (now - this.lastSyncRenderer);
 		if (d > 0) try {
 			Thread.sleep(d);
 		} catch (InterruptedException e) {
 			error(CORE, "Frame syncing failed: " + e.getMessage());
 		}
-		this.lastSync = now;
+		this.lastSyncRenderer = now;
 	}
 	
-	public void render() {
-		renderer.renderAll(window);
+	protected void syncUpdater() {
+		long now = System.currentTimeMillis();
+		long d = this.ref.TICKRATE - (now - this.lastSyncTick);
+		if (d > 0) try {
+			Thread.sleep(d);
+		} catch (InterruptedException e) {
+			error(CORE, "Frame syncing failed: " + e.getMessage());
+		}
+		this.lastSyncTick = now;
 	}
 	
 	public String getTitle() {
@@ -144,7 +163,30 @@ class UpdaterThread extends Thread implements Runnable {
 	public void run() {
 		
 		while (window.running) {
-			updater.
+			updater.updateAll(window);
+			window.syncUpdater();
+		}
+		
+	}
+	
+}
+
+class RendererThread extends Thread implements Runnable {
+	
+	private Window window;
+	private Renderer renderer;
+	
+	public RendererThread(Window window, Renderer renderer) {
+		this.window = window;
+		this.renderer = renderer;
+	}
+	
+	@Override
+	public void run() {
+		
+		while (window.running) {
+			renderer.renderAll(window.window);
+			window.syncRenderer();
 		}
 		
 	}

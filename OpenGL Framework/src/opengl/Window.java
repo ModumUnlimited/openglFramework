@@ -2,7 +2,6 @@ package opengl;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
-import static opengl.Reference.*;
 import static opengl.Module.*;
 import static opengl.errors.Errors.*;
 
@@ -12,6 +11,7 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.lwjgl.opengl.GL;
 
 import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
@@ -41,25 +41,13 @@ public class Window {
 	private UpdaterThread tUpdate;
 	
 	static {
+		System.out.println("Startup sequence: initializng GLFW...");
 		init = glfwInit();
 	}
 	
 	public Window(String title, int width, int height, boolean fullscreen) {
-		if (!init) {
-			fatal(CORE, "Could not initialize GLFW! Exiting...");
-			System.exit(ERR_GLFW_INIT);
-		}
-		window = glfwCreateWindow(width, height, title, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
-		if (window == NULL) {
-			fatal(CORE, "Could not create window!");
-			System.exit(ERR_WINDOW_CREATE);
-		}
-		this.ref = new Reference();
-		this.title = title;
-		this.ref.WINDOW_WIDTH = width;
-		this.ref.WINDOW_HEIGHT = height;
 		stdOut = new Logger(System.out);
-		stdOut.setLevel(LoggerLevel.INFO);
+		stdOut.setLevel(LoggerLevel.VERBOSE);
 		try {
 			File logs = new File("logs");
 			if (!logs.exists()) logs.mkdir();
@@ -69,6 +57,22 @@ public class Window {
 		} catch (FileNotFoundException e) {
 			error(Module.CORE, "Could not create logfile: " + e.getMessage());
 		}
+		debug(CORE, "Checking for active GLFW...");
+		if (!init) {
+			fatal(CORE, "Could not initialize GLFW! Exiting...");
+			System.exit(ERR_GLFW_INIT);
+		}
+		info(CORE, "Creating window...");
+		window = glfwCreateWindow(width, height, title, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+		if (window == NULL) {
+			fatal(CORE, "Could not create window!");
+			System.exit(ERR_WINDOW_CREATE);
+		}
+		debug(CORE, "Setting up state...");
+		this.ref = new Reference();
+		this.title = title;
+		this.ref.WINDOW_WIDTH = width;
+		this.ref.WINDOW_HEIGHT = height;
 		lastSyncRenderer = System.currentTimeMillis();
 		lastSyncTick = System.currentTimeMillis();
 		renderer = new Renderer();
@@ -91,8 +95,9 @@ public class Window {
 	public void open() {
 		info(CORE, "Opening window...");
 		running = true;
-		tUpdate.start();
 		tRend.start();
+		info(CORE, "Window opened successfully!");
+		tUpdate.run();
 	}
 	
 	protected void syncRenderer() {
@@ -165,10 +170,11 @@ class UpdaterThread extends Thread implements Runnable {
 	
 	@Override
 	public void run() {
-		
+		window.info(UPDATER, "Updater started.");
 		while (!glfwWindowShouldClose(window.window)) {
 			updater.updateAll(window);
 			window.syncUpdater();
+			glfwPollEvents();
 		}
 		window.running = false;
 		
@@ -188,7 +194,10 @@ class RendererThread extends Thread implements Runnable {
 	
 	@Override
 	public void run() {
-		
+		window.info(RENDERER, "Renderer started.");
+		glfwMakeContextCurrent(window.window);
+		GL.createCapabilities();
+		glfwSwapInterval(0);
 		while (window.running) {
 			renderer.renderAll(window.window);
 			window.syncRenderer();

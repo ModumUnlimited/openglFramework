@@ -6,8 +6,6 @@ package opengl.updateing;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.lwjgl.glfw.GLFW;
-
 import opengl.Window;
 
 /**
@@ -60,8 +58,6 @@ public class Updater {
 	 * @param window The window that called this updater belong to.
 	 */
 	public void updateAll(Window window) {
-		
-		GLFW.glfwPollEvents();
 		
 		for (IUpdatable updatable : attached.values()) updatable.update(window);
 		

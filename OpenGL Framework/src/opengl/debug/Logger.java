@@ -8,9 +8,6 @@ import static opengl.debug.LoggerLevel.VERBOSE;
 import static opengl.debug.LoggerLevel.WARNING;
 
 import java.io.PrintStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class Logger {
 	

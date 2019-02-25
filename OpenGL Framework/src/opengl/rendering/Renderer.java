@@ -65,6 +65,7 @@ public class Renderer {
 		glClear(clearMask);
 		
 		for (IRenderable r : attached.values()) {
+			glfwMakeContextCurrent(window);
 			r.render(window);
 		}
 		

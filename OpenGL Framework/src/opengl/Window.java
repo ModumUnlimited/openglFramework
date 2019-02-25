@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.lwjgl.opengl.GL;
 
@@ -20,15 +21,18 @@ import opengl.updateing.Updater;
 
 public class Window {
 	
-	protected final long window;
+	protected long window;
 	
 	private String title;
 	
 	public Logger stdOut;
 	public Logger fileOut;
 	
-	private static boolean init;
+	protected ConcurrentLinkedQueue<Initializable> inits;
+	
+	protected static boolean init;
 	protected boolean running;
+	protected boolean fullscreen;
 	private long lastSyncRenderer;
 	private long lastSyncTick;
 	
@@ -37,7 +41,7 @@ public class Window {
 	private Renderer renderer;
 	private Updater updater;
 	
-	private RendererThread tRend;
+	protected RendererThread tRend;
 	private UpdaterThread tUpdate;
 	
 	static {
@@ -46,6 +50,7 @@ public class Window {
 	}
 	
 	public Window(String title, int width, int height, boolean fullscreen) {
+		this.fullscreen = fullscreen;
 		stdOut = new Logger(System.out);
 		stdOut.setLevel(LoggerLevel.VERBOSE);
 		try {
@@ -56,17 +61,6 @@ public class Window {
 			fileOut.setLevel(LoggerLevel.VERBOSE);
 		} catch (FileNotFoundException e) {
 			error(Module.CORE, "Could not create logfile: " + e.getMessage());
-		}
-		debug(CORE, "Checking for active GLFW...");
-		if (!init) {
-			fatal(CORE, "Could not initialize GLFW! Exiting...");
-			System.exit(ERR_GLFW_INIT);
-		}
-		info(CORE, "Creating window...");
-		window = glfwCreateWindow(width, height, title, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
-		if (window == NULL) {
-			fatal(CORE, "Could not create window!");
-			System.exit(ERR_WINDOW_CREATE);
 		}
 		debug(CORE, "Setting up state...");
 		this.ref = new Reference();
@@ -79,7 +73,8 @@ public class Window {
 		updater = new Updater();
 		tRend = new RendererThread(this, renderer);
 		tUpdate = new UpdaterThread(this, updater);
-		this.ref = new Reference();
+		this.ref.WINDOW_TITLE = title;
+		inits = new ConcurrentLinkedQueue<>();
 		info(CORE, "Successfully created Window Object!");
 	}
 	
@@ -95,9 +90,20 @@ public class Window {
 	public void open() {
 		info(CORE, "Opening window...");
 		running = true;
-		tRend.start();
+		tUpdate.start();
 		info(CORE, "Window opened successfully!");
-		tUpdate.run();
+	}
+	
+	public void getContext() {
+		glfwMakeContextCurrent(window);
+	}
+	
+	public Renderer getRenderer() {
+		return renderer;
+	}
+	
+	public Updater getUpdater() {
+		return updater;
 	}
 	
 	protected void syncRenderer() {
@@ -155,6 +161,10 @@ public class Window {
 		if (fileOut != null) fileOut.verbose(module.name(), msg);
 		stdOut.verbose(module.name(), msg);
 	}
+
+	public void addInit(Initializable init) {
+		inits.add(init);
+	}
 	
 }
 
@@ -171,7 +181,21 @@ class UpdaterThread extends Thread implements Runnable {
 	@Override
 	public void run() {
 		window.info(UPDATER, "Updater started.");
+		window.debug(CORE, "Checking for active GLFW...");
+		if (!Window.init) {
+			window.fatal(CORE, "Could not initialize GLFW! Exiting...");
+			System.exit(ERR_GLFW_INIT);
+		}
+		window.info(CORE, "Creating window...");
+		window.window = glfwCreateWindow(window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT, window.ref.WINDOW_TITLE, window.fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+		if (window.window == NULL) {
+			window.fatal(CORE, "Could not create window!");
+			System.exit(ERR_WINDOW_CREATE);
+		}
+		window.tRend.start();
 		while (!glfwWindowShouldClose(window.window)) {
+			if (!window.inits.isEmpty())
+				for (Initializable i : window.inits) i.init();
 			updater.updateAll(window);
 			window.syncUpdater();
 			glfwPollEvents();

@@ -11,16 +11,20 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import opengl.rendering.IRenderable;
+
 /**
  * @author Linus Vogel <linvogel@student.ethz.ch>
  *
  */
-public class Texture {
+public class Texture extends IRenderable {
 	
 	private int id;
 	
+	private int width;
+	private int height;
+	
 	public Texture(int width, int height, int[] pixels) {
-		id = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, id);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_INT, pixels);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -38,12 +42,41 @@ public class Texture {
 		this(ImageIO.read(new File(path)));
 	}
 	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
 	public void bind() {
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 	
 	public void unbind() {
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	@Override
+	public void render(long window) {
+		bind();
+		
+		glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex2f(-0.8f, -0.8f);
+			
+			glTexCoord2f(1, 0);
+			glVertex2f(0.8f, -0.8f);
+			
+			glTexCoord2f(1, 1);
+			glVertex2f(0.8f, 0.8f);
+			
+			glTexCoord2f(0, 1);
+			glVertex2f(-0.8f, 0.8f);
+		glEnd();
+		
+		unbind();
 	}
 	
 }

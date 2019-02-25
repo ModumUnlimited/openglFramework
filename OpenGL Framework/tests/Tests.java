@@ -18,13 +18,13 @@ public class Tests {
 			@Override
 			public void init() {
 				try {
-					texture = new Texture("C:\\Users\\Linus\\Pictures\\funny\\19511254_1662880293725594_9039944942219137906_n.jpg");
+					texture = new Texture("smile.jpg");
+					window.getRenderer().attachObject(texture);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		});
-		window.getRenderer().attachObject(texture);
 	}
 	
 

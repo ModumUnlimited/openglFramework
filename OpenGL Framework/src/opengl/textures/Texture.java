@@ -25,13 +25,18 @@ public class Texture extends IRenderable {
 	private int height;
 	
 	public Texture(int width, int height, int[] pixels) {
+		this.width = width;
+		this.height = height;
+		id = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_INT, pixels);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
 	public Texture(BufferedImage img) {
-		this(img.getWidth(), img.getHeight(), img.getRGB(0, 0, img.getWidth(), img.getHeight(), new int[img.getWidth()*img.getHeight()], 0, img.getWidth()));
+		this(img.getWidth(), img.getHeight(), img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth()));
 	}
 	
 	public Texture(File textureFile) throws IOException {
@@ -64,16 +69,16 @@ public class Texture extends IRenderable {
 		
 		glBegin(GL_QUADS);
 			glTexCoord2f(0, 0);
-			glVertex2f(-0.8f, -0.8f);
+			glVertex2f(-0.8f, 0.8f);
 			
 			glTexCoord2f(1, 0);
-			glVertex2f(0.8f, -0.8f);
-			
-			glTexCoord2f(1, 1);
 			glVertex2f(0.8f, 0.8f);
 			
+			glTexCoord2f(1, 1);
+			glVertex2f(0.8f, -0.8f);
+			
 			glTexCoord2f(0, 1);
-			glVertex2f(-0.8f, 0.8f);
+			glVertex2f(-0.8f, -0.8f);
 		glEnd();
 		
 		unbind();

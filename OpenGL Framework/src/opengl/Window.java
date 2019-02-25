@@ -1,6 +1,7 @@
 package opengl;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import static opengl.Module.*;
 import static opengl.errors.Errors.*;
@@ -194,8 +195,6 @@ class UpdaterThread extends Thread implements Runnable {
 		}
 		window.tRend.start();
 		while (!glfwWindowShouldClose(window.window)) {
-			if (!window.inits.isEmpty())
-				for (Initializable i : window.inits) i.init();
 			updater.updateAll(window);
 			window.syncUpdater();
 			glfwPollEvents();
@@ -222,7 +221,13 @@ class RendererThread extends Thread implements Runnable {
 		glfwMakeContextCurrent(window.window);
 		GL.createCapabilities();
 		glfwSwapInterval(0);
+		glEnable(GL_TEXTURE_2D);
 		while (window.running) {
+			while (!window.inits.isEmpty()) {
+				Initializable i = window.inits.poll();
+				i.init();
+			}
+			
 			renderer.renderAll(window.window);
 			window.syncRenderer();
 		}

@@ -1,8 +1,6 @@
 package opengl;
 
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static opengl.Reference.*;
 import static opengl.Module.CORE;
@@ -17,17 +15,23 @@ import java.util.Date;
 
 import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
+import opengl.rendering.Renderer;
 
 public class Window {
 	
 	private final long window;
 	
-	private static String title;
+	private String title;
 	
-	public static Logger stdOut;
-	public static Logger fileOut;
+	public Logger stdOut;
+	public Logger fileOut;
+	
+	public Reference ref;
 	
 	private static boolean init;
+	private long lastSync;
+	
+	private Renderer renderer;
 	
 	static {
 		init = glfwInit();
@@ -43,9 +47,10 @@ public class Window {
 			fatal(CORE, "Could not create window!");
 			System.exit(ERR_WINDOW_CREATE);
 		}
-		Window.title = title;
-		state[WINDOW_WIDTH] = width;
-		state[WINDOW_HEIGHT] = height;
+		this.ref = new Reference();
+		this.title = title;
+		this.ref.state[WINDOW_WIDTH] = width;
+		this.ref.state[WINDOW_HEIGHT] = height;
 		stdOut = new Logger(System.out);
 		stdOut.setLevel(LoggerLevel.INFO);
 		try {
@@ -55,15 +60,47 @@ public class Window {
 		} catch (FileNotFoundException e) {
 			error(Module.CORE, "Could not create logfile: " + e.getMessage());
 		}
+		lastSync = System.currentTimeMillis();
+		renderer = new Renderer();
 	}
 	
 	public Window(String title, int width, int height) {
 		this(title, width, height, false);
 	}
 	
+	public void setFramerate(float fps) {
+		if (fps == 0) this.ref.state[REFRESH_DELAY] = 0;
+		else this.ref.state[REFRESH_DELAY] = Math.round(1000.0f/fps);
+	}
 	
+	private void sync() {
+		long now = System.currentTimeMillis();
+		long d = this.ref.state[REFRESH_DELAY] - (now - this.lastSync);
+		if (d > 0) try {
+			Thread.sleep(d);
+		} catch (InterruptedException e) {
+			error(CORE, "Frame syncing failed: " + e.getMessage());
+		}
+		this.lastSync = now;
+	}
 	
-	public static String getTitle() {
+	public void open() {
+		
+		while (!glfwWindowShouldClose(window)) {
+			render();
+		}
+		
+	}
+	
+	public void update() {
+		
+	}
+	
+	public void render() {
+		renderer.renderAll(window);
+	}
+	
+	public String getTitle() {
 		return new String(title);
 	}
 	

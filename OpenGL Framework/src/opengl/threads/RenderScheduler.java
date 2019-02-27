@@ -28,6 +28,9 @@ public class RenderScheduler extends Thread implements Runnable {
 		last = System.currentTimeMillis();
 		while (!window.shouldClose()) {
 			
+			
+			
+			ThreadUtil.sync(window, last, delay);
 		}
 	}
 	

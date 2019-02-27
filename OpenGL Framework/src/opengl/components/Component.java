@@ -17,7 +17,7 @@ import opengl.Window;
  */
 public abstract class Component {
 
-	private static Integer components = 0;
+	private static int components = 0;
 	private final int id;
 	
 	public Component() {
@@ -31,12 +31,10 @@ public abstract class Component {
 		return id;
 	}
 	
-	private static final int getNewID() {
-		synchronized (components) {
-			int out = components;
-			components++;
-			return out;
-		}
+	private static synchronized final int getNewID() {
+		int out = components;
+		components++;
+		return out;
 	}
 	
 }

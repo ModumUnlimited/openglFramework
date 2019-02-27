@@ -3,7 +3,13 @@
  */
 package opengl.threads;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryUtil.*;
+
+import org.lwjgl.opengl.GL;
+
 import opengl.Window;
+import opengl.components.Panel;
 
 /**
  * This is a maintainer thread, that will keep track of all objects
@@ -22,6 +28,8 @@ public class WindowMaintainerThread extends Thread implements Runnable {
 	private int renderDelay = Math.round(1000f/60f);
 	private int updateDelay = Math.round(1000f/24f);
 	
+	private RenderScheduler renderer;
+	
 	public WindowMaintainerThread(Window window) {
 		this.window = window;
 		setName("CORE");
@@ -29,13 +37,15 @@ public class WindowMaintainerThread extends Thread implements Runnable {
 	
 	@Override
 	public void run() {
-		window.checkGLFW();
-		window.createWindow();
+		window.debug("Starting RenderScheduler");
+		renderer = new RenderScheduler(this.window, this.renderDelay);
 		
+		renderer.start();
 	}
 	
 	public void setRenderRate(float fps) {
 		this.renderDelay = Math.round(1000f / fps);
+		renderer.setDelay(this.renderDelay);
 	}
 	
 	public void setUpdateRate(float ups) {

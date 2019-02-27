@@ -14,6 +14,8 @@ import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
 import opengl.threads.WindowMaintainerThread;
 
+import opengl.components.Panel;
+
 /**
  * A window class that uses GLFW to display its contents.
  * @author Linus Vogel <linvogel@student.ethz.ch>
@@ -24,10 +26,13 @@ public class Window {
 	private static long firstWindow = NULL;
 	
 	public final Object glfwContextLock = new Object();
+	public final Object windowInitLock = new Object();
+	private boolean initialized = false;
 	
 	private long window;
 	
 	private String title;
+	private Panel contentPane;
 	
 	public Logger stdOut;
 	public Logger fileOut;
@@ -71,8 +76,9 @@ public class Window {
 		this.ref.WINDOW_WIDTH = width;
 		this.ref.WINDOW_HEIGHT = height;
 		this.ref.WINDOW_TITLE = title;
-		info("Successfully created Window Object!");
 		this.maintainer = new WindowMaintainerThread(this);
+		maintainer.start();
+		info("Successfully created Window Object!");
 	}
 	
 	
@@ -86,6 +92,10 @@ public class Window {
 		this(title, width, height, false);
 	}
 	
+	/**
+	 * Returns a copy of the window handle to this glfwWindow.
+	 * @return a copy of the window handle
+	 */
 	public long getWindowHandle() {
 		return Long.valueOf(this.window);
 	}
@@ -114,7 +124,9 @@ public class Window {
 	 * that will keep this window running.
 	 */
 	public void open() {
-		maintainer.start();
+		info("Opening Window...");
+		checkGLFW();
+		createWindow();
 	}
 	
 	/**
@@ -180,6 +192,9 @@ public class Window {
 	 * this method will throw an error message and terminate the program.
 	 */
 	public void createWindow() {
+		// Set window hints
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+		
 		this.window = glfwCreateWindow(ref.WINDOW_WIDTH, ref.WINDOW_HEIGHT, ref.WINDOW_TITLE,
 				fullscreen ? glfwGetPrimaryMonitor() : NULL,  firstWindow == 0 ? NULL : firstWindow);
 		if (firstWindow == 0) firstWindow = this.window;
@@ -197,6 +212,50 @@ public class Window {
 	 */
 	public boolean shouldClose() {
 		return glfwWindowShouldClose(window);
+	}
+
+
+	/**
+	 * Returns the content pane of this window. All components should be
+	 * added to this container.
+	 * @return the content pane of this window object.
+	 */
+	public Panel getContentPane() {
+		return this.contentPane;
+	}
+
+
+	/**
+	 * Makes this window visible
+	 */
+	public void show() {
+		synchronized (windowInitLock) {
+			if (!initialized) try {
+				debug("Waiting for the Window to be ready!");
+				windowInitLock.wait();
+			} catch (InterruptedException e) {
+				error("Waiting interrupted!");
+			}
+		}
+		info("Making window visible.");
+		glfwShowWindow(window);
+	}
+
+
+	/**
+	 * Sets the content pane for this window
+	 * @param panel the new content pane
+	 */
+	public void setContentPane(Panel panel) {
+		this.contentPane = panel;
+	}
+
+
+	/**
+	 * 
+	 */
+	public void setInit() {
+		this.initialized = true;
 	}
 	
 }

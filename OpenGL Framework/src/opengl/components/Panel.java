@@ -33,7 +33,7 @@ public class Panel extends Container {
 		position = new Vector2d(x, y);
 		dimension = new Vector2d(w, h);
 		try {
-			t = new Texture("smile.jpg");
+			t = new Texture("smile.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -42,21 +42,19 @@ public class Panel extends Container {
 	@Override
 	public void renderSelf(Window window) {
 		t.bind();
-		
-	
 
 		glBegin(GL_QUADS);
-			//glTexCoord2f(0, 0);
-			glColor4d(1, 0, 0, 1);
+			glTexCoord2f(0, 0);
+			//glColor4d(1, 0, 0, 1);
 			glVertex2f(-0.5f, 0.5f);
-			//glTexCoord2f(1, 0);
-			glColor4d(0, 1, 0, 1);
+			glTexCoord2f(1, 0);
+			//glColor4d(0, 1, 0, 1);
 			glVertex2f(0.5f, 0.5f);
-			//glTexCoord2f(1, 1);
-			glColor4d(0, 0, 1, 1);
+			glTexCoord2f(1, 1);
+			//glColor4d(0, 0, 1, 1);
 			glVertex2f(0.5f, -0.5f);
-			//glTexCoord2f(0, 1);
-			glColor4d(1, 1, 1, 1);
+			glTexCoord2f(0, 1);
+			//glColor4d(1, 1, 1, 1);
 			glVertex2f(-0.5f, -0.5f);
 		glEnd();
 		

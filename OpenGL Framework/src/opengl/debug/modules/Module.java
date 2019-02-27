@@ -1,4 +1,4 @@
-package opengl;
+package opengl.debug.modules;
 
 public enum Module implements IModule{
 	

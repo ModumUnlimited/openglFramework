@@ -11,13 +11,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import opengl.rendering.IRenderable;
-
 /**
  * @author Linus Vogel <linvogel@student.ethz.ch>
  *
  */
-public class Texture extends IRenderable {
+public class Texture {
 	
 	private int id;
 	
@@ -62,26 +60,4 @@ public class Texture extends IRenderable {
 	public void unbind() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-
-	@Override
-	public void render(long window) {
-		bind();
-		
-		glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
-			glVertex2f(-0.8f, 0.8f);
-			
-			glTexCoord2f(1, 0);
-			glVertex2f(0.8f, 0.8f);
-			
-			glTexCoord2f(1, 1);
-			glVertex2f(0.8f, -0.8f);
-			
-			glTexCoord2f(0, 1);
-			glVertex2f(-0.8f, -0.8f);
-		glEnd();
-		
-		unbind();
-	}
-	
 }

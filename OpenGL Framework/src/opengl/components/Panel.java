@@ -43,14 +43,20 @@ public class Panel extends Container {
 	public void renderSelf(Window window) {
 		t.bind();
 		
+	
+
 		glBegin(GL_QUADS);
-			glTexCoord2f(0, 0);
+			//glTexCoord2f(0, 0);
+			glColor4d(1, 0, 0, 1);
 			glVertex2f(-0.5f, 0.5f);
-			glTexCoord2f(1, 0);
+			//glTexCoord2f(1, 0);
+			glColor4d(0, 1, 0, 1);
 			glVertex2f(0.5f, 0.5f);
-			glTexCoord2f(1, 1);
+			//glTexCoord2f(1, 1);
+			glColor4d(0, 0, 1, 1);
 			glVertex2f(0.5f, -0.5f);
-			glTexCoord2f(0, 1);
+			//glTexCoord2f(0, 1);
+			glColor4d(1, 1, 1, 1);
 			glVertex2f(-0.5f, -0.5f);
 		glEnd();
 		

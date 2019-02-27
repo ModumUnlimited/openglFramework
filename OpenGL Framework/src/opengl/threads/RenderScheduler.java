@@ -27,7 +27,6 @@ public class RenderScheduler extends Thread implements Runnable {
 		setName("SCHEDULER-RENDER");
 	}
 	
-	
 	@Override
 	public void run() {
 		last = System.currentTimeMillis();
@@ -51,6 +50,8 @@ public class RenderScheduler extends Thread implements Runnable {
 		while (!window.shouldClose()) {
 			synchronized (this) {
 				glfwPollEvents();
+				
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 				
 				render();
 				

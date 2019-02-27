@@ -12,6 +12,7 @@ import java.util.Date;
 
 import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
+import opengl.event.KeyEvent;
 import opengl.threads.WindowMaintainerThread;
 
 import opengl.components.Panel;
@@ -78,6 +79,7 @@ public class Window {
 		this.ref.WINDOW_TITLE = title;
 		this.maintainer = new WindowMaintainerThread(this);
 		maintainer.start();
+		Reference.windows.put(window, this);
 		info("Successfully created Window Object!");
 	}
 	
@@ -252,10 +254,30 @@ public class Window {
 
 
 	/**
-	 * 
+	 * Mark this window as ready to be rendered
 	 */
 	public void setInit() {
 		this.initialized = true;
 	}
+
+
+	public void keyPressed(KeyEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void keyReleased(KeyEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void keyRepeat(KeyEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	
 }

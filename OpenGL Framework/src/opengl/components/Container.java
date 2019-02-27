@@ -1,6 +1,3 @@
-/**
- * 
- */
 package opengl.components;
 
 import java.util.LinkedList;
@@ -40,9 +37,17 @@ public abstract class Container extends Component {
 		}
 	}
 	
+	public Component getChild(int index) {
+		synchronized (children) {
+			return children.get(index);
+		}
+	}
+	
 	@Override
 	public void render(Window window) {
-		renderSelf(window);
+		synchronized (window.glfwContextLock) {
+			renderSelf(window);
+		}
 		renderChildren(window);
 	}
 	
@@ -61,7 +66,7 @@ public abstract class Container extends Component {
 	 */
 	public void renderChildren(Window window) {
 		synchronized (children) {
-			for (Component c : children) c.render(window);
+			for (Component c : children) synchronized (window.glfwContextLock) { c.render(window); }
 		}
 	};
 

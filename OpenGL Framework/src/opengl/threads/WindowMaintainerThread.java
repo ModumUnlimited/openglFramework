@@ -31,6 +31,7 @@ public class WindowMaintainerThread extends Thread implements Runnable {
 	public void run() {
 		window.checkGLFW();
 		window.createWindow();
+		
 	}
 	
 	public void setRenderRate(float fps) {

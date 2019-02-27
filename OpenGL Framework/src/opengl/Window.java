@@ -14,11 +14,18 @@ import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
 import opengl.threads.WindowMaintainerThread;
 
+/**
+ * A window class that uses GLFW to display its contents.
+ * @author Linus Vogel <linvogel@student.ethz.ch>
+ *
+ */
 public class Window {
 	
 	private static long firstWindow = NULL;
 	
-	protected long window;
+	public final Object glfwContextLock = new Object();
+	
+	private long window;
 	
 	private String title;
 	
@@ -38,6 +45,13 @@ public class Window {
 		init = glfwInit();
 	}
 	
+	/**
+	 * Creates a new Window object with specified title, width and height. Can be set fullscreen if desired.
+	 * @param title
+	 * @param width
+	 * @param height
+	 * @param fullscreen
+	 */
 	public Window(String title, int width, int height, boolean fullscreen) {
 		this.fullscreen = fullscreen;
 		stdOut = new Logger(System.out);
@@ -61,14 +75,38 @@ public class Window {
 		this.maintainer = new WindowMaintainerThread(this);
 	}
 	
+	
+	/**
+	 * Creates a new non fullscreen window with specified width, height and title.
+	 * @param title
+	 * @param width
+	 * @param height
+	 */
 	public Window(String title, int width, int height) {
 		this(title, width, height, false);
 	}
 	
+	public long getWindowHandle() {
+		return Long.valueOf(this.window);
+	}
 	
+	/**
+	 * Sets the framerate of this window. A framerate of 0 or above 2000 will result in no limit.
+	 * @param fps the taarget framerate to be set for this window.
+	 */
 	public void setFramerate(float fps) {
-		if (fps == 0) this.ref.FRAMERATE = 0;
-		else this.ref.FRAMERATE = Math.round(1000f/fps);
+		maintainer.setRenderRate(fps);
+	}
+	
+	/**
+	 * Sets the tickrate of this window. A tickrate of 0 or above 2000 will result in no limit.
+	 * It is recommended to not exceed a tickrate of 128 to keep load on the CPU lower. Higher
+	 * tickrates might impact performance of this Program, including some other program or even
+	 * the operating system.
+	 * @param tps
+	 */
+	public void setTickrate(float tps) {
+		maintainer.setUpdateRate(tps);
 	}
 	
 	/**
@@ -79,8 +117,21 @@ public class Window {
 		maintainer.start();
 	}
 	
+	/**
+	 * Returns the title of this window.
+	 * @return the title of this window.
+	 */
 	public String getTitle() {
 		return new String(title);
+	}
+	
+	/**
+	 * Sets the title of this window.
+	 * @param title the new title for this window.
+	 */
+	public void setTitle(String title) {
+		this.ref.WINDOW_TITLE = title;
+		glfwSetWindowTitle(window, title);
 	}
 	
 	public void fatal(String msg) {
@@ -137,6 +188,15 @@ public class Window {
 			glfwTerminate();
 			System.exit(ERR_WINDOW_CREATE);
 		}
+	}
+
+
+	/**
+	 * Returns true if this window should close.
+	 * @return true if the window should close, otherwise false
+	 */
+	public boolean shouldClose() {
+		return glfwWindowShouldClose(window);
 	}
 	
 }

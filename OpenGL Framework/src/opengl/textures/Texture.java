@@ -1,6 +1,3 @@
-/**
- * 
- */
 package opengl.textures;
 
 import static org.lwjgl.opengl.GL11.*;

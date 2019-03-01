@@ -32,7 +32,7 @@ public class Tests {
 		
 		Image[] imgs = new Image[icons.length];
 		for (int i = 0; i < icons.length; i++) {
-			imgs[i] = ImageIO.read(icons[i]).getScaledInstance(r.nextInt(56)+8, r.nextInt(56)+8, BufferedImage.SCALE_SMOOTH);
+			imgs[i] = ImageIO.read(icons[i]).getScaledInstance(4*(r.nextInt(56)+8), 4*(r.nextInt(56)+8), BufferedImage.SCALE_SMOOTH);
 			area += imgs[i].getWidth(null) * imgs[i].getHeight(null);
 			System.out.println("Processing: " + i + "/" + imgs.length);
 		}

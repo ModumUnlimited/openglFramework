@@ -47,11 +47,6 @@ public class TextureAtlasNode {
 			int dw = rect.getWidth() - img.getWidth(null);
 			int dh = rect.getHeight() - img.getHeight(null);
 			
-			assert(!(dh == 0 && dw == 0));
-			
-			//assert(rect.right - dw != rect.left && rect.right - dw+1 != rect.right);
-			//assert(rect.bottom - dh+1 != rect.bottom && rect.bottom - dh != rect.top);
-			
 			if (dw > dh) {
 				children[0].rect = new TextureAtlasRectangle(rect.left, rect.top, rect.right - dw, rect.bottom);
 				children[1].rect = new TextureAtlasRectangle(rect.right - dw+1, rect.top, rect.right, rect.bottom);
@@ -65,6 +60,10 @@ public class TextureAtlasNode {
 			
 			return children[0].insert(img);
 		}
+	}
+	
+	public TextureAtlasRectangle getRect() {
+		return rect;
 	}
 	
 }

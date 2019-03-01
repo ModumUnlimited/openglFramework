@@ -3,6 +3,7 @@ package opengl.textures;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,32 +17,31 @@ import javax.imageio.ImageIO;
  */
 public class Texture {
 	
-	private int id;
+	private TextureAtlas atlas;
 	
 	private int width;
 	private int height;
+	private Image img;
 	
-	public Texture(int width, int height, int[] pixels) {
+	private TextureAtlasRectangle rectangle;
+	
+	public Texture(int width, int height, Image img, TextureAtlas atlas) {
 		this.width = width;
 		this.height = height;
-		id = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, id);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		this.atlas = atlas;
+		this.img = img;
 	}
 	
-	public Texture(BufferedImage img) {
-		this(img.getWidth(), img.getHeight(), img.getRGB(0, 0, img.getWidth(), img.getHeight(), null, 0, img.getWidth()));
+	public Texture(BufferedImage img, TextureAtlas atlas) {
+		this(img.getWidth(), img.getHeight(), img, atlas);
 	}
 	
-	public Texture(File textureFile) throws IOException {
-		this(ImageIO.read(textureFile));
+	public Texture(File textureFile, TextureAtlas atlas) throws IOException {
+		this(ImageIO.read(textureFile), atlas);
 	}
 	
-	public Texture(String path) throws IOException {
-		this(ImageIO.read(new File(path)));
+	public Texture(String path, TextureAtlas atlas) throws IOException {
+		this(ImageIO.read(new File(path)), atlas);
 	}
 	
 	public int getWidth() {
@@ -52,11 +52,11 @@ public class Texture {
 		return height;
 	}
 	
-	public void bind() {
-		glBindTexture(GL_TEXTURE_2D, id);
+	public Image getImage() {
+		return img;
 	}
 	
-	public void unbind() {
-		glBindTexture(GL_TEXTURE_2D, 0);
+	public void setRect(TextureAtlasRectangle rect) {
+		this.rectangle = rect;
 	}
 }

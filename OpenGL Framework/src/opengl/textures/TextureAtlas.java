@@ -3,7 +3,6 @@ package opengl.textures;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -14,6 +13,8 @@ public class TextureAtlas {
 	
 	private ArrayList<Texture> textures = new ArrayList<>();
 	private TextureAtlasNode root;
+	
+	private int size;
 	
 	private boolean bound = false;
 	
@@ -44,11 +45,16 @@ public class TextureAtlas {
 		return out;
 	}
 	
+	public int getSize() {
+		return this.size;
+	}
+	
 	public void createAtlas() {
 		//get the total size of all images
 		int size = 0;
 		for (Texture tex : textures) size += tex.getHeight()*tex.getHeight();
 		size = (int) Math.round( Math.sqrt(size) * 1.05d );
+		this.size = size;
 		
 		atlas = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 		root = new TextureAtlasNode(atlas);

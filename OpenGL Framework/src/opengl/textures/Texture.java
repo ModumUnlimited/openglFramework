@@ -30,6 +30,7 @@ public class Texture {
 		this.height = height;
 		this.atlas = atlas;
 		this.img = img;
+		atlas.addTexture(this);
 	}
 	
 	public Texture(BufferedImage img, TextureAtlas atlas) {
@@ -54,6 +55,39 @@ public class Texture {
 	
 	public Image getImage() {
 		return img;
+	}
+	
+	public double getX1d() {
+		return (double) this.getX1d() / (double) this.atlas.getSize();
+	}
+	
+	public double getY1d() {
+		return (double) this.getY1d() / (double) this.atlas.getSize();
+	}
+	
+	public double getX2d() {
+		return (double) this.getX2d() / (double) this.atlas.getSize();
+	}
+	
+	public double getY2d() {
+		return (double) this.getY2d() / (double) this.atlas.getSize();
+	}
+	
+	
+	public int getX1i() {
+		return this.rectangle.left;
+	}
+
+	public int getY1i() {
+		return this.rectangle.top;
+	}
+
+	public int getX2i() {
+		return this.rectangle.right;
+	}
+
+	public int getY2i() {
+		return this.rectangle.bottom;
 	}
 	
 	public void setRect(TextureAtlasRectangle rect) {

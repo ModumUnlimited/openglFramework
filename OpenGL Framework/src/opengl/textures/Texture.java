@@ -11,7 +11,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 /**
- * 
+ * Texture class. This contains all necessary data needed to render a texture
+ * (including the benefit of texture atlas performance).
  * @author Linus Vogel <linvogel@student.ethz.ch>
  *
  */

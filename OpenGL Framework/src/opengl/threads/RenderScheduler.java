@@ -8,6 +8,8 @@ import org.lwjgl.opengl.GL;
 
 import opengl.Window;
 import opengl.components.Panel;
+import opengl.fonts.FontLibrary;
+import opengl.textures.TextureAtlas;
 
 /**
  * This is a scheduler that will take care of all rendering of its window.
@@ -32,10 +34,12 @@ public class RenderScheduler extends Thread implements Runnable {
 		last = System.currentTimeMillis();
 		window.debug("Renderer started.");
 		window.open();
-		synchronized (window.glfwContextLock) {
+		synchronized (Window.glfwContextLock) {
 			glfwMakeContextCurrent(window.getWindowHandle());
 			GL.createCapabilities();
 			glEnable(GL_TEXTURE_2D);
+			window.setTextureAtlas(new TextureAtlas());
+			FontLibrary.setup(window.getTextureAtlas());
 			window.setContentPane(new Panel(0, 0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT));
 			glfwMakeContextCurrent(NULL);
 		}
@@ -64,7 +68,7 @@ public class RenderScheduler extends Thread implements Runnable {
 	
 	
 	public void render() {
-		synchronized (window.glfwContextLock) {
+		synchronized (Window.glfwContextLock) {
 			glfwMakeContextCurrent(window.getWindowHandle());
 			window.getContentPane().render(window);
 			glfwMakeContextCurrent(NULL);

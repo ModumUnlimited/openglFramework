@@ -1,4 +1,5 @@
 
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,13 +13,15 @@ import javax.imageio.ImageIO;
 import org.junit.Test;
 
 import opengl.Window;
+import opengl.fonts.GLFont;
+import opengl.textures.TextureAtlas;
 import opengl.textures.TextureAtlasNode;
 
 public class Tests {
 	
 	public static void main(String[] args) {
-		Window window = new Window("Test Window", 800, 600);
-		window.show();
+		Window window = new Window("Some Title", 800, 600);
+		
 	}
 	
 	

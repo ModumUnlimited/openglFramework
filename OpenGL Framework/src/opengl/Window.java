@@ -1,8 +1,18 @@
 package opengl;
 
-import static opengl.errors.Errors.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static opengl.errors.Errors.ERR_GLFW_INIT;
+import static opengl.errors.Errors.ERR_WINDOW_CREATE;
+import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,12 +20,12 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import opengl.components.Panel;
 import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
 import opengl.event.KeyEvent;
+import opengl.textures.TextureAtlas;
 import opengl.threads.WindowMaintainerThread;
-
-import opengl.components.Panel;
 
 /**
  * A window class that uses GLFW to display its contents.
@@ -26,7 +36,7 @@ public class Window {
 	
 	private static long firstWindow = NULL;
 	
-	public final Object glfwContextLock = new Object();
+	public static final Object glfwContextLock = new Object();
 	public final Object windowInitLock = new Object();
 	private boolean initialized = false;
 	
@@ -41,6 +51,8 @@ public class Window {
 	protected static boolean init;
 	protected boolean running;
 	protected boolean fullscreen;
+	
+	public static TextureAtlas textures;
 	
 	private WindowMaintainerThread maintainer;
 	
@@ -81,6 +93,14 @@ public class Window {
 		maintainer.start();
 		Reference.windows.put(window, this);
 		info("Successfully created Window Object!");
+	}
+	
+	public void setTextureAtlas(TextureAtlas atlas) {
+		this.textures = atlas;
+	}
+	
+	public TextureAtlas getTextureAtlas() {
+		return this.textures;
 	}
 	
 	

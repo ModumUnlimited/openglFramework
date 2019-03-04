@@ -2,6 +2,7 @@ package opengl.textures;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.glfw.GLFW.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -9,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+
+import opengl.Window;
 
 public class TextureAtlas {
 	
@@ -51,6 +54,10 @@ public class TextureAtlas {
 	
 	public int getSize() {
 		return this.size;
+	}
+	
+	public BufferedImage getImage() {
+		return atlas;
 	}
 	
 	public void createAtlas() {

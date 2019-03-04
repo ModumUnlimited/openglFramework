@@ -35,12 +35,8 @@ public class Panel extends Container {
 		position = new Vector2d(x, y);
 		dimension = new Vector2d(w, h);
 		try {
-			atlas = new TextureAtlas();
+			atlas = Window.textures;
 			t = new Texture("smile.png", atlas);
-			t1 = new Texture("icons/png/bookmark-1.png", atlas);
-//			t2 = new Texture("icons/png/bookmark-3.png", atlas);
-//			t3 = new Texture("icons/png/calendar-1.png", atlas);
-//			t4 = new Texture("icons/png/calendar-9.png", atlas);
 			atlas.createAtlas();
 		} catch (IOException e) {
 			e.printStackTrace();

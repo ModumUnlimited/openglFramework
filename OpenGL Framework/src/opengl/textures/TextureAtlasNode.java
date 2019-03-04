@@ -26,7 +26,6 @@ public class TextureAtlasNode {
 			TextureAtlasNode node = children[0].insert(img);
 			if (node != null) return node;
 			node = children[1].insert(img);
-			//if (node != null) System.out.println("This shouldn't happen");
 			return node;
 		} else {
 			if (this.image != null) return null;

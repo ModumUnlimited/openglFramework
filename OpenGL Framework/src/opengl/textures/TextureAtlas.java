@@ -4,7 +4,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 public class TextureAtlas {
 	
@@ -63,8 +67,29 @@ public class TextureAtlas {
 			tex.setRect(root.insert(tex.getImage()).getRect());
 		}
 		
+		int right = 0;
+		int bottom = 0;
+		
+		for (Texture tex : textures) {
+			if (tex.getX2i() > right) right = tex.getX2i();
+			if (tex.getY2i() > bottom) bottom = tex.getY2i();
+		}
+		
+		try {
+			ImageIO.write(atlas, "png", new File("ATLAS-STATE.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		int[] rgb = new int[atlas.getWidth()*atlas.getHeight()];
+		atlas.getRGB(0, 0, atlas.getWidth(), atlas.getHeight(), rgb, 0, atlas.getWidth());
+		
 		bind();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, atlas.getWidth(), atlas.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, atlas.getRGB(0, 0, atlas.getWidth(), atlas.getHeight(), null, 0, atlas.getWidth()));
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, atlas.getWidth(), atlas.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, rgb);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		unbind();
 	}
 	

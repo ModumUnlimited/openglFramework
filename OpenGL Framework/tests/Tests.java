@@ -11,15 +11,16 @@ import javax.imageio.ImageIO;
 
 import org.junit.Test;
 
+import opengl.Window;
 import opengl.textures.TextureAtlasNode;
 
 public class Tests {
-//	
-//	public static void main(String[] args) {
-//		Window window = new Window("Test Window", 800, 600);
-//		window.show();
-//	}
-//	
+	
+	public static void main(String[] args) {
+		Window window = new Window("Test Window", 800, 600);
+		window.show();
+	}
+	
 	
 	@Test
 	public void testAtlas() throws IOException {

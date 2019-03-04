@@ -1,8 +1,5 @@
 package opengl.textures;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -59,19 +56,19 @@ public class Texture {
 	}
 	
 	public double getX1d() {
-		return (double) this.getX1d() / (double) this.atlas.getSize();
+		return (double) this.getX1i() / (double) this.atlas.getSize();
 	}
 	
 	public double getY1d() {
-		return (double) this.getY1d() / (double) this.atlas.getSize();
+		return (double) this.getY1i() / (double) this.atlas.getSize();
 	}
 	
 	public double getX2d() {
-		return (double) this.getX2d() / (double) this.atlas.getSize();
+		return (double) this.getX2i() / (double) this.atlas.getSize();
 	}
 	
 	public double getY2d() {
-		return (double) this.getY2d() / (double) this.atlas.getSize();
+		return (double) this.getY2i() / (double) this.atlas.getSize();
 	}
 	
 	

@@ -6,6 +6,7 @@ package opengl.components;
 import static opengl.components.Component.*;
 
 import opengl.Window;
+import opengl.textures.TextureAtlas;
 
 /**
  * This is a representaion of a GUI component, much like the ones you find in
@@ -19,6 +20,7 @@ public abstract class Component {
 
 	private static int components = 0;
 	private final int id;
+	private TextureAtlas atlas = null;
 	
 	public Component() {
 		this.id = getNewID();
@@ -26,6 +28,9 @@ public abstract class Component {
 	
 	public abstract void render(Window window);
 	public abstract void update();
+	
+	public void setAtlas(TextureAtlas atlas) {}
+	public void setupTextures() {}
 	
 	public final int getID() {
 		return id;

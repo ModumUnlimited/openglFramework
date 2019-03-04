@@ -67,6 +67,14 @@ public class TextureAtlas {
 			tex.setRect(root.insert(tex.getImage()).getRect());
 		}
 		
+		int right = 0;
+		int bottom = 0;
+		
+		for (Texture tex : textures) {
+			if (tex.getX2i() > right) right = tex.getX2i();
+			if (tex.getY2i() > bottom) bottom = tex.getY2i();
+		}
+		
 		try {
 			ImageIO.write(atlas, "png", new File("ATLAS-STATE.png"));
 		} catch (IOException e) {

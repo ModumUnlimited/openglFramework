@@ -10,7 +10,7 @@ public class TextureAtlasNode {
 	
 	private TextureAtlasNode[] children = new TextureAtlasNode[2];
 	private TextureAtlasRectangle rect;
-	private Image image;
+	private Texture image;
 	
 	private TextureAtlasNode(BufferedImage img, boolean bool) {
 		this.enclosing = img;
@@ -21,7 +21,7 @@ public class TextureAtlasNode {
 		this(img, true);
 	}
 	
-	public TextureAtlasNode insert(Image img) {
+	public TextureAtlasNode insert(Texture img) {
 		if (children[0] != null || children[1] != null) { // if this is not a leaf
 			TextureAtlasNode node = children[0].insert(img);
 			if (node != null) return node;
@@ -29,12 +29,13 @@ public class TextureAtlasNode {
 			return node;
 		} else {
 			if (this.image != null) return null;
-			if (rect.getWidth() < img.getWidth(null) || rect.getHeight() < img.getHeight(null)) return null;
-			if (rect.getWidth() == img.getWidth(null) && rect.getHeight() == img.getHeight(null)) {
+			if (rect.getWidth() < img.getWidth() || rect.getHeight() < img.getHeight()) return null;
+			if (rect.getWidth() == img.getWidth() && rect.getHeight() == img.getHeight()) {
 				this.image = img;
 				
 				Graphics g = enclosing.createGraphics();
-				g.drawImage(img, rect.left, rect.top, null);
+				img.setRect(rect);
+				img.drawToAtlas(g);
 				g.dispose();
 				
 				return this;
@@ -43,8 +44,8 @@ public class TextureAtlasNode {
 			children[0] = new TextureAtlasNode(enclosing, false);
 			children[1] = new TextureAtlasNode(enclosing, false);
 
-			int dw = rect.getWidth() - img.getWidth(null);
-			int dh = rect.getHeight() - img.getHeight(null);
+			int dw = rect.getWidth() - img.getWidth();
+			int dh = rect.getHeight() - img.getHeight();
 			
 			if (dw > dh) {
 				children[0].rect = new TextureAtlasRectangle(rect.left, rect.top, rect.right - dw, rect.bottom);

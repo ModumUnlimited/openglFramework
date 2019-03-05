@@ -1,6 +1,9 @@
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,14 +17,18 @@ import org.junit.Test;
 
 import opengl.Window;
 import opengl.fonts.GLFont;
+import opengl.textures.Texture;
 import opengl.textures.TextureAtlas;
 import opengl.textures.TextureAtlasNode;
 
 public class Tests {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		Window window = new Window("Some Title", 800, 600);
-		
+		while (window.getTextureAtlas() == null || window.getTextureAtlas().getImage() == null) Thread.sleep(1);
+		ImageIO.write(window.getTextureAtlas().getImage(), "png", new File("Atlas.png"));
+		System.exit(0);
+//		for (Font s : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) System.out.println(s.getFontName());
 	}
 	
 	
@@ -48,9 +55,7 @@ public class Tests {
 		int size = (int) Math.round(Math.sqrt(area) * 1.05d);
 		System.out.println("Total size of all images: " + area + " <= " + size + "^2");
 
-		BufferedImage atlas = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-		
-		TextureAtlasNode node = new TextureAtlasNode(atlas);
+		TextureAtlas atlas = new TextureAtlas();
 		
 		int i = 1;
 		
@@ -58,11 +63,11 @@ public class Tests {
 			//if (i > 11) break;
 			
 			System.out.print("Image (" + i++ + "): " + img.getWidth(null) + "x" + img.getHeight(null) + ":\t");
-			TextureAtlasNode t = node.insert(img);
-			System.out.println(t != null ? "Done." : "ERROR");
+			atlas.addTexture(new Texture(img, atlas));
 		}
 		
-		ImageIO.write(atlas, "png", new File("ATLAS.png"));
+		atlas.createAtlas();
+		ImageIO.write(atlas.getImage(), "png", new File("ATLAS.png"));
 		
 	}
 	

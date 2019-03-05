@@ -37,7 +37,6 @@ public class Panel extends Container {
 		try {
 			atlas = Window.textures;
 			t = new Texture("smile.png", atlas);
-			atlas.createAtlas();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -24,6 +24,7 @@ import opengl.components.Panel;
 import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
 import opengl.event.KeyEvent;
+import opengl.fonts.FontLibrary;
 import opengl.textures.TextureAtlas;
 import opengl.threads.WindowMaintainerThread;
 
@@ -57,6 +58,8 @@ public class Window {
 	private WindowMaintainerThread maintainer;
 	
 	public Reference ref;
+
+	private FontLibrary fontLibrary;
 	
 	static {
 		System.out.println("Startup sequence: initializng GLFW...");
@@ -96,11 +99,11 @@ public class Window {
 	}
 	
 	public void setTextureAtlas(TextureAtlas atlas) {
-		this.textures = atlas;
+		textures = atlas;
 	}
 	
 	public TextureAtlas getTextureAtlas() {
-		return this.textures;
+		return textures;
 	}
 	
 	
@@ -296,6 +299,20 @@ public class Window {
 	public void keyRepeat(KeyEvent event) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	/**
+	 * @return
+	 */
+	public FontLibrary getFontLibrary() {
+		return fontLibrary;
+	}
+
+	/**
+	 * @param fontLibrary2
+	 */
+	public void setFontLibrary(FontLibrary fontLibrary) {
+		this.fontLibrary = fontLibrary;
 	}
 
 

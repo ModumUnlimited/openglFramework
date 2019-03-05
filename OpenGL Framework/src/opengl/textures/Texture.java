@@ -1,7 +1,9 @@
 package opengl.textures;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,13 +15,20 @@ import javax.imageio.ImageIO;
  * @author Linus Vogel <linvogel@student.ethz.ch>
  *
  */
-public class Texture {
+public class Texture implements Comparable<Texture> {
 	
 	private TextureAtlas atlas;
 	
+	private final int textureID;
+	
 	private int width;
 	private int height;
+	private int hOffset;
 	private Image img;
+	private String toDraw;
+	private Font font;
+	
+	private boolean hasImage = true;
 	
 	private TextureAtlasRectangle rectangle;
 	
@@ -28,11 +37,23 @@ public class Texture {
 		this.height = height;
 		this.atlas = atlas;
 		this.img = img;
-		atlas.addTexture(this);
+		this.textureID = atlas.addTexture(this);
 	}
 	
-	public Texture(BufferedImage img, TextureAtlas atlas) {
-		this(img.getWidth(), img.getHeight(), img, atlas);
+	public Texture(int width, int height, TextureAtlas atlas, Image img, Font font, String toDraw, int hOffset, boolean hasImage) {
+		this.hasImage = hasImage;
+		this.img = img;
+		this.toDraw = toDraw;
+		this.atlas = atlas;
+		this.width = width;
+		this.height = height;
+		this.hOffset = hOffset;
+		this.font = font;
+		this.textureID = atlas.addTexture(this);
+	}
+	
+	public Texture(Image img, TextureAtlas atlas) {
+		this(img.getWidth(null), img.getHeight(null), img, atlas);
 	}
 	
 	public Texture(File textureFile, TextureAtlas atlas) throws IOException {
@@ -43,6 +64,10 @@ public class Texture {
 		this(ImageIO.read(new File(path)), atlas);
 	}
 	
+	public int getTextureID() {
+		return this.textureID;
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -90,5 +115,23 @@ public class Texture {
 	
 	public void setRect(TextureAtlasRectangle rect) {
 		this.rectangle = rect;
+	}
+
+	/**
+	 * @param g
+	 */
+	public void drawToAtlas(Graphics g) {
+		if (hasImage) g.drawImage(this.img, this.rectangle.left, this.rectangle.top, null);
+		else {
+			g.setFont(this.font);
+			g.setColor(Color.BLACK);
+			g.fillRect(this.rectangle.left, this.rectangle.top, width, height);
+			g.setColor(Color.WHITE);
+			g.drawString(this.toDraw, this.rectangle.left, this.rectangle.top + this.hOffset);
+		}
+	}
+	
+	public int compareTo(Texture o) {
+		return getWidth()*getHeight() - o.getWidth()-o.getHeight();
 	}
 }

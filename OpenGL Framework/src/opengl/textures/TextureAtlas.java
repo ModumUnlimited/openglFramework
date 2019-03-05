@@ -2,23 +2,21 @@ package opengl.textures;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.glfw.GLFW.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
-
-import opengl.Window;
 
 public class TextureAtlas {
 	
 	private BufferedImage atlas;
 	private final int textureHandle;
 	
-	private ArrayList<Texture> textures = new ArrayList<>();
+	private LinkedList<Texture> textures = new LinkedList<>();
 	private TextureAtlasNode root;
 	
 	private int size;
@@ -45,6 +43,7 @@ public class TextureAtlas {
 	
 	public int addTexture(Texture texture) {
 		int out;
+		System.out.println("Adding textures");
 		synchronized (textures) {
 			out = textures.size();
 			textures.add(texture);
@@ -67,11 +66,13 @@ public class TextureAtlas {
 		size = (int) Math.round( Math.sqrt(size) * 1.05d );
 		this.size = size;
 		
+		Collections.sort(textures);
+		
 		atlas = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 		root = new TextureAtlasNode(atlas);
 		
 		for (Texture tex : textures) {
-			tex.setRect(root.insert(tex.getImage()).getRect());
+			root.insert(tex);
 		}
 		
 		int right = 0;
@@ -98,6 +99,15 @@ public class TextureAtlas {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		unbind();
+	}
+
+	/**
+	 * @param texture
+	 */
+	public void remove(Texture texture) {
+		synchronized (textures) {
+			textures.remove(texture.getTextureID());
+		}
 	}
 	
 	

@@ -22,52 +22,10 @@ import opengl.textures.TextureAtlas;
 
 public class Tests {
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		Window window = new Window("Some Title", 800, 600);
-		while (window.getTextureAtlas() == null || window.getTextureAtlas().getImage() == null) Thread.sleep(1);
-		ImageIO.write(window.getTextureAtlas().getImage(), "png", new File("Atlas.png"));
 
 //		for (Font s : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) System.out.println(s.getFontName());
-	}
-	
-	
-	@Test
-	public void testAtlas() throws IOException {
-		
-		
-		File[] icons = new File("icons/png").listFiles();
-		System.out.println("Found " + icons.length + " textures...");
-		Random r = new Random();
-		int area = 0;
-		
-		Image[] imgs = new Image[icons.length];
-		for (int i = 0; i < icons.length; i++) {
-			imgs[i] = ImageIO.read(icons[i]).getScaledInstance(4*(r.nextInt(56)+8), 4*(r.nextInt(56)+8), BufferedImage.SCALE_SMOOTH);
-			area += imgs[i].getWidth(null) * imgs[i].getHeight(null);
-			System.out.println("Processing: " + i + "/" + imgs.length);
-		}
-		System.out.println("Sorting...");
-		Arrays.sort(imgs, comp);
-		System.out.println("Done.");
-		
-		
-		int size = (int) Math.round(Math.sqrt(area) * 1.05d);
-		System.out.println("Total size of all images: " + area + " <= " + size + "^2");
-
-		TextureAtlas atlas = new TextureAtlas();
-		
-		int i = 1;
-		
-		for (Image img : imgs) {
-			//if (i > 11) break;
-			
-			System.out.print("Image (" + i++ + "): " + img.getWidth(null) + "x" + img.getHeight(null) + ":\t");
-			atlas.addTexture(new Texture(img, atlas));
-		}
-		
-		atlas.createAtlas();
-		ImageIO.write(atlas.getImage(), "png", new File("ATLAS.png"));
-		
 	}
 	
 	Comparator<Image> comp = new Comparator<Image>() {

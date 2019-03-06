@@ -134,7 +134,7 @@ public class Texture implements Comparable<Texture> {
 	}
 	
 	public int compareTo(Texture o) {
-		return getWidth()*getHeight() - o.getWidth()-o.getHeight();
+		return o.getWidth() - getWidth();
 	}
 
 	/**

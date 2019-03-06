@@ -80,10 +80,11 @@ public class GLFont {
 		g.fillRect(0, 0, width, height);
 		g.setColor(Color.WHITE);
 		g.drawString("" + c, 0, Math.round(height - metrics.getDescent() - 3));
-		g.dispose();
+		
 		
 		int[] rgb = new int[width*height];
 		img.getRGB(0, 0, width, height, rgb, 0, width);
+		
 		
 		int top, bottom, left, right;
 		top = left = Integer.MAX_VALUE;
@@ -101,8 +102,21 @@ public class GLFont {
 				if (y > bottom) bottom = y+1;
 			}
 		}
+
+		g.dispose();
 		
-		glyphs[c] = new Texture(found ? img.getSubimage(left, top, right-left, bottom-top) : img, atlas);
+		if (c != 0) glyphs[c] = found ? new Texture(img.getSubimage(left, top, right-left, bottom-top), atlas) : glyphs[0].nonRenderCopy();
+		else glyphs[c] = new Texture(img, atlas);
+	}
+
+	/**
+	 * 
+	 */
+	public void addToAtlas() {
+		atlas.addTexture(glyphs[0]);
+		for (Texture tex : glyphs) {
+			if (tex != glyphs[0]) atlas.addTexture(tex);
+		}
 	}
 	
 }

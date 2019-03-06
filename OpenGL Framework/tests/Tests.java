@@ -19,7 +19,6 @@ import opengl.Window;
 import opengl.fonts.GLFont;
 import opengl.textures.Texture;
 import opengl.textures.TextureAtlas;
-import opengl.textures.TextureAtlasNode;
 
 public class Tests {
 	
@@ -27,7 +26,7 @@ public class Tests {
 		Window window = new Window("Some Title", 800, 600);
 		while (window.getTextureAtlas() == null || window.getTextureAtlas().getImage() == null) Thread.sleep(1);
 		ImageIO.write(window.getTextureAtlas().getImage(), "png", new File("Atlas.png"));
-		System.exit(0);
+
 //		for (Font s : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) System.out.println(s.getFontName());
 	}
 	

@@ -17,6 +17,8 @@ import javax.imageio.ImageIO;
  */
 public class Texture implements Comparable<Texture> {
 	
+	private static final boolean drawDebug = true;
+	
 	private TextureAtlas atlas;
 	
 	private final int textureID;
@@ -28,27 +30,28 @@ public class Texture implements Comparable<Texture> {
 	private String toDraw;
 	private Font font;
 	
-	private boolean hasImage = true;
+	private boolean render = true;
 	
-	private TextureAtlasRectangle rectangle;
+	private Rectangle rectangle;
+	
+	private Texture(TextureAtlas atlas, int textureID, int width, int height, int hOffset, Image img, String toDraw, Font font, boolean render, Rectangle rectangle) {
+		this.atlas = atlas;
+		this.textureID = textureID;
+		this.width = width;
+		this.height = height;
+		this.hOffset = hOffset;
+		this.img = img;
+		this.toDraw = toDraw;
+		this.font = font;
+		this.render = render;
+		this.rectangle = rectangle;
+	}
 	
 	public Texture(int width, int height, Image img, TextureAtlas atlas) {
 		this.width = width;
 		this.height = height;
 		this.atlas = atlas;
 		this.img = img;
-		this.textureID = atlas.addTexture(this);
-	}
-	
-	public Texture(int width, int height, TextureAtlas atlas, Image img, Font font, String toDraw, int hOffset, boolean hasImage) {
-		this.hasImage = hasImage;
-		this.img = img;
-		this.toDraw = toDraw;
-		this.atlas = atlas;
-		this.width = width;
-		this.height = height;
-		this.hOffset = hOffset;
-		this.font = font;
 		this.textureID = atlas.addTexture(this);
 	}
 	
@@ -98,40 +101,48 @@ public class Texture implements Comparable<Texture> {
 	
 	
 	public int getX1i() {
-		return this.rectangle.left;
+		return this.rectangle.x;
 	}
 
 	public int getY1i() {
-		return this.rectangle.top;
+		return this.rectangle.y;
 	}
 
 	public int getX2i() {
-		return this.rectangle.right;
+		return this.rectangle.x + this.rectangle.width-1;
 	}
 
 	public int getY2i() {
-		return this.rectangle.bottom;
+		return this.rectangle.y + this.rectangle.height-1;
 	}
 	
-	public void setRect(TextureAtlasRectangle rect) {
-		this.rectangle = rect;
+	public void setRect(Rectangle rectangle) {
+		this.rectangle = rectangle;
 	}
 
 	/**
 	 * @param g
 	 */
 	public void drawToAtlas(Graphics g) {
-		if (hasImage) g.drawImage(this.img, this.rectangle.left, this.rectangle.top, null);
-		else {
-			g.setFont(this.font);
-			g.setColor(Color.BLACK);
-			g.fillRect(this.rectangle.left, this.rectangle.top, width, height);
-			g.setColor(Color.WHITE);
-			g.drawString(this.toDraw, this.rectangle.left, this.rectangle.top + this.hOffset);
+		if (render) {
+			g.drawImage(this.img, this.getX1i(), this.getY1i(), null);
+			if (drawDebug) {
+				g.setColor(Color.RED);
+				g.drawRect(this.getX1i(), this.getY1i(), this.getWidth(), this.getHeight());
+			}
 		}
 	}
 	
 	public int compareTo(Texture o) {
 		return getWidth()*getHeight() - o.getWidth()-o.getHeight();
+	}
+
+	/**
+	 * @return
+	 */
+	public Texture nonRenderCopy() {
+		System.out.println("Creating alias...");
+		Texture out = new Texture(atlas, textureID, width, height, hOffset, img, toDraw, font, false, rectangle);
+		return out;
 	}
 }

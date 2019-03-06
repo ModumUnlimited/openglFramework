@@ -41,11 +41,11 @@ public class RenderScheduler extends Thread implements Runnable {
 			window.setTextureAtlas(new TextureAtlas());
 			
 			window.setFontLibrary(new FontLibrary(window.getTextureAtlas()));
-			window.getFontLibrary().insertToAtlas();
+			//window.getFontLibrary().insertToAtlas();
 			
-			window.getTextureAtlas().createAtlas();
 			
 			window.setContentPane(new Panel(0, 0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT));
+			window.getTextureAtlas().createAtlas();
 			glfwMakeContextCurrent(NULL);
 		}
 		

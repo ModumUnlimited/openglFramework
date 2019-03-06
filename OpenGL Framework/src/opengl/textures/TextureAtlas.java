@@ -3,6 +3,8 @@ package opengl.textures;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +19,7 @@ public class TextureAtlas {
 	private final int textureHandle;
 	
 	private LinkedList<Texture> textures = new LinkedList<>();
-	private TextureAtlasNode root;
+	private TopMostLeftFit packer;
 	
 	private int size;
 	
@@ -43,7 +45,6 @@ public class TextureAtlas {
 	
 	public int addTexture(Texture texture) {
 		int out;
-		System.out.println("Adding textures");
 		synchronized (textures) {
 			out = textures.size();
 			textures.add(texture);
@@ -62,17 +63,17 @@ public class TextureAtlas {
 	public void createAtlas() {
 		//get the total size of all images
 		int size = 0;
+		System.out.println("Stiching " + textures.size() + " textures into the atlas...");
 		for (Texture tex : textures) size += tex.getHeight()*tex.getHeight();
 		size = (int) Math.round( Math.sqrt(size) * 1.05d );
 		this.size = size;
 		
 		Collections.sort(textures);
 		
-		atlas = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-		root = new TextureAtlasNode(atlas);
+		packer = new TopMostLeftFit(size);
 		
 		for (Texture tex : textures) {
-			root.insert(tex);
+			tex.setRect(packer.insert(tex));
 		}
 		
 		int right = 0;
@@ -83,10 +84,20 @@ public class TextureAtlas {
 			if (tex.getY2i() > bottom) bottom = tex.getY2i();
 		}
 		
+		atlas = new BufferedImage(right, bottom, BufferedImage.TYPE_INT_ARGB);
+		Graphics g = atlas.createGraphics();
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, right, bottom);
+		
+		for (Texture tex : textures) {
+			tex.drawToAtlas(g);
+		}
+		
+		g.dispose();
+		
 		try {
 			ImageIO.write(atlas, "png", new File("ATLAS-STATE.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -105,6 +116,7 @@ public class TextureAtlas {
 	 * @param texture
 	 */
 	public void remove(Texture texture) {
+		System.out.println("removint");
 		synchronized (textures) {
 			textures.remove(texture.getTextureID());
 		}

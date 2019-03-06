@@ -15,7 +15,7 @@ public class FontLibrary {
 	
 	public FontLibrary(TextureAtlas atlas) {
 		this.atlas = atlas;
-		addFont(new Font("Calibri", 16, Font.PLAIN));
+		addFont(new Font("Calibri", Font.PLAIN, 128));
 		insertToAtlas();
 	}
 	
@@ -27,6 +27,7 @@ public class FontLibrary {
 		removed.clear();
 		for (GLFont font : added) {
 			activeFonts.add(font);
+			font.addToAtlas();
 		}
 		added.clear();
 		atlas.createAtlas();

@@ -141,10 +141,6 @@ public class GLFont {
 			if (tex != glyphs[0]) atlas.addTexture(tex);
 		}
 	}
-
-	public float getSize() {
-		return this.fontSize / 32;
-	}
 	
 	public void setSize(float fontSize) {
 		this.fontSize = fontSize;

@@ -55,7 +55,6 @@ public class Panel extends Container {
 		
 		RenderUtils.renderText(window.getWindowHandle(), "Hello There", -0.6d, -0.6d);
 		
-		RenderUtil.renderText(-0.5f, 0f, window.getFontLibrary().activeFonts.get(0), "Hello World!");
 		
 	}
 

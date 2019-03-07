@@ -49,11 +49,14 @@ public class RenderScheduler extends Thread implements Runnable {
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glPopMatrix();
 			
+			glMatrixMode(GL_PROJECTION);
+			glOrtho(0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT, 0, 1, -1);
+			
 			window.setTextureAtlas(new TextureAtlas(window));
 			
 			window.setFontLibrary(new FontLibrary(window.getTextureAtlas()));
 			
-			window.setContentPane(new Panel(0, 0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT));
+			window.setContentPane(new Panel(-1, -1, 2, 2));
 			window.getContentPane().setWindow(window);
 			window.getTextureAtlas().createAtlas();
 			glViewport(0, window.ref.WINDOW_HEIGHT, window.ref.WINDOW_WIDTH,window.ref.WINDOW_HEIGHT);
@@ -68,8 +71,9 @@ public class RenderScheduler extends Thread implements Runnable {
 		}
 		glfwSwapInterval(0);
 		while (!window.shouldClose()) {
-			glfwPollEvents();
 
+			glfwPollEvents();
+			
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 			render();
@@ -79,7 +83,7 @@ public class RenderScheduler extends Thread implements Runnable {
 				glfwSwapBuffers(window.getWindowHandle());
 				glfwMakeContextCurrent(NULL);
 			}
-			ThreadUtil.sync(window, last, delay);
+			last = ThreadUtil.sync(window, last, delay);
 		}
 	}
 	
@@ -88,7 +92,7 @@ public class RenderScheduler extends Thread implements Runnable {
 	public void render() {
 		synchronized (Window.glfwContextLock) {
 			glfwMakeContextCurrent(window.getWindowHandle());
-			window.getContentPane().render(window);
+			window.getContentPane().render(window, 0, 0);
 			glfwMakeContextCurrent(NULL);
 		}
 	}

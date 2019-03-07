@@ -1,12 +1,7 @@
 package opengl.components;
 
-import java.io.IOException;
-
 import opengl.Window;
 import opengl.math.Vector2d;
-import opengl.rendering.RenderUtils;
-import opengl.textures.Texture;
-import opengl.textures.TextureAtlas;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -16,51 +11,36 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Panel extends Container {
 	
-	private Vector2d position;
-	private Vector2d dimension;
-	Texture t, t1, t2, t3, t4;
-	TextureAtlas atlas;
-	
 	public Panel() {
-		this(0, 0, 0, 0);
+		super();
 	}
 	
 	public Panel(double x, double y) {
-		this(x, y, 0, 0);
+		super(x, y);
 	}
 	
 	public Panel(double x, double y, double w, double h) {
-		position = new Vector2d(x, y);
-		dimension = new Vector2d(w, h);
-		try {
-			atlas = Window.textures;
-			t = new Texture("smile.png", atlas);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		super(x, y, w, h);
 	}
 	
 	@Override
-	public void renderSelf(Window window) {
+	public void renderSelf(Window window, double xOff, double yOff) {
+		glColor4f(red, green, blue, alpha);
 		
-		if (!atlas.isBound()) atlas.bind();
-		
-		RenderUtils.renderTexture(t);
-		
-		if (Math.abs(window.getNormalizedMouseX()) <= 0.5f && Math.abs(window.getNormalizedMouseY()) <= 0.5f) {
-			RenderUtils.setColor(0.5f, 0.5f, 1, 1);
-		} else {
-			RenderUtils.setColor(1, 1, 1, 1);
-		}
-		
-		RenderUtils.renderText(window.getWindowHandle(), "Hello There", -0.6d, -0.6d);
-		
+		glBegin(GL_QUADS);
+			glVertex2d(xOff + position.getX(), yOff + position.getY());
+			glVertex2d(xOff + position.getX() + dimension.getX(), yOff + position.getY());
+			glVertex2d(xOff + position.getX() + dimension.getX(), yOff + position.getY() + dimension.getY());
+			glVertex2d(xOff + position.getX(), yOff + position.getY() + dimension.getY());
+		glEnd();
 		
 	}
 
 	@Override
-	public void update() {
-		
+	public void update(Window window) {
+		synchronized (children) {
+			for (Component comp : children) comp.update(window);
+		}
 	}
 	
 	

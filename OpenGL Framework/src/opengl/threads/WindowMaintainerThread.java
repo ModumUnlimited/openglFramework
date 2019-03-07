@@ -29,6 +29,7 @@ public class WindowMaintainerThread extends Thread implements Runnable {
 	private int updateDelay = Math.round(1000f/24f);
 	
 	private RenderScheduler renderer;
+	private UpdateScheduler updater;
 	
 	public WindowMaintainerThread(Window window) {
 		this.window = window;
@@ -39,8 +40,10 @@ public class WindowMaintainerThread extends Thread implements Runnable {
 	public void run() {
 		window.debug("Starting RenderScheduler");
 		renderer = new RenderScheduler(this.window, this.renderDelay);
+		updater = new UpdateScheduler(this.window, this.updateDelay);
 		
 		renderer.start();
+		updater.start();
 	}
 	
 	public void setRenderRate(float fps) {
@@ -50,6 +53,7 @@ public class WindowMaintainerThread extends Thread implements Runnable {
 	
 	public void setUpdateRate(float ups) {
 		this.updateDelay = Math.round(1000f / ups);
+		updater.setDelay(this.updateDelay);
 	}
 	
 }

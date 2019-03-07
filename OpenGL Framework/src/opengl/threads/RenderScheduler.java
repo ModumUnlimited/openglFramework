@@ -40,25 +40,25 @@ public class RenderScheduler extends Thread implements Runnable {
 		synchronized (Window.glfwContextLock) {
 			glfwMakeContextCurrent(window.getWindowHandle());
 			GL.createCapabilities();
+			glMatrixMode(GL_TEXTURE);
+			glPushMatrix();
+			glEnable(GL_ALPHA_TEST);
+			glAlphaFunc(GL_GREATER, 0.0f);
 			glEnable(GL_TEXTURE_2D);
-			window.setTextureAtlas(new TextureAtlas());
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glPopMatrix();
+			
+			window.setTextureAtlas(new TextureAtlas(window));
 			
 			window.setFontLibrary(new FontLibrary(window.getTextureAtlas()));
-			
-			File[] arr = new File("icons/png").listFiles();
-			Texture[] tex = new Texture[arr.length];
-			for (int i = 0; i < arr.length; i++) {
-				try {
-					tex[i] = new Texture(arr[i], window.getTextureAtlas());
-				} catch (Exception e) {}
-			}
 			
 			window.setContentPane(new Panel(0, 0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT));
 			window.getTextureAtlas().createAtlas();
 			glfwMakeContextCurrent(NULL);
 		}
 		
-		// Incase someone already waits for the window to open, notify him
+		// Incase someone already waits for this window to open, notify him
 		synchronized (window.windowInitLock) {
 			window.info("Window ready!");
 			window.setInit();
@@ -66,16 +66,17 @@ public class RenderScheduler extends Thread implements Runnable {
 		}
 		glfwSwapInterval(0);
 		while (!window.shouldClose()) {
-			synchronized (this) {
-				glfwPollEvents();
-				
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				
-				render();
-				
+			glfwPollEvents();
+
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			
+			render();
+			synchronized (Window.glfwContextLock) {
+				glfwMakeContextCurrent(window.getWindowHandle());
 				glfwSwapBuffers(window.getWindowHandle());
-				ThreadUtil.sync(window, last, delay);
+				glfwMakeContextCurrent(NULL);
 			}
+			ThreadUtil.sync(window, last, delay);
 		}
 	}
 	
@@ -88,11 +89,7 @@ public class RenderScheduler extends Thread implements Runnable {
 			glfwMakeContextCurrent(NULL);
 		}
 	}
-
-
-	/**
-	 * @param renderDelay
-	 */
+	
 	public synchronized void setDelay(int renderDelay) {
 		this.delay = renderDelay;
 	}

@@ -2,16 +2,7 @@ package opengl;
 
 import static opengl.errors.Errors.ERR_GLFW_INIT;
 import static opengl.errors.Errors.ERR_WINDOW_CREATE;
-import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.File;
@@ -20,6 +11,9 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.lwjgl.glfw.GLFW;
+
+import opengl.callbacks.FramebufferSizeCallback;
 import opengl.components.Panel;
 import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
@@ -92,6 +86,8 @@ public class Window {
 		this.ref.WINDOW_WIDTH = width;
 		this.ref.WINDOW_HEIGHT = height;
 		this.ref.WINDOW_TITLE = title;
+		glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE);
+		
 		this.maintainer = new WindowMaintainerThread(this);
 		maintainer.start();
 		Reference.windows.put(window, this);
@@ -228,6 +224,8 @@ public class Window {
 			glfwTerminate();
 			System.exit(ERR_WINDOW_CREATE);
 		}
+		
+		glfwSetFramebufferSizeCallback(this.window, new FramebufferSizeCallback(this));
 	}
 
 

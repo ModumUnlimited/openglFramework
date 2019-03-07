@@ -13,20 +13,27 @@ import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 
+import opengl.Window;
+
 public class TextureAtlas {
 	
 	private BufferedImage atlas;
 	private final int textureHandle;
+	private Window window;
 	
 	private LinkedList<Texture> textures = new LinkedList<>();
 	private TopMostLeftFit packer;
 	
 	private int size;
 	
+	private int width;
+	private int height;
+	
 	private boolean bound = false;
 	
-	public TextureAtlas() {
+	public TextureAtlas(Window window) {
 		this.textureHandle = glGenTextures();
+		this.window = window;
 	}
 	
 	public synchronized boolean isBound() {
@@ -56,6 +63,10 @@ public class TextureAtlas {
 		return this.size;
 	}
 	
+	public int getNumTextures() {
+		return this.textures.size();
+	}
+	
 	public BufferedImage getImage() {
 		return atlas;
 	}
@@ -63,7 +74,7 @@ public class TextureAtlas {
 	public void createAtlas() {
 		//get the total size of all images
 		int size = 0;
-		System.out.println("Stiching " + textures.size() + " textures into the atlas...");
+		window.debug("Stiching " + textures.size() + " textures into the atlas...");
 		for (Texture tex : textures) size += tex.getHeight()*tex.getHeight();
 		size = (int) Math.round( Math.sqrt(size) * 1.05d );
 		this.size = size;
@@ -86,7 +97,7 @@ public class TextureAtlas {
 		
 		atlas = new BufferedImage(right, bottom, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = atlas.createGraphics();
-		g.setColor(Color.BLACK);
+		g.setColor(new Color(0, 0, 0, 0));
 		g.fillRect(0, 0, right, bottom);
 		
 		for (Texture tex : textures) {
@@ -105,6 +116,9 @@ public class TextureAtlas {
 		int[] rgb = new int[atlas.getWidth()*atlas.getHeight()];
 		atlas.getRGB(0, 0, atlas.getWidth(), atlas.getHeight(), rgb, 0, atlas.getWidth());
 		
+		this.width = this.atlas.getWidth();
+		this.height = this.atlas.getHeight();
+		
 		bind();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, atlas.getWidth(), atlas.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, rgb);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -120,6 +134,31 @@ public class TextureAtlas {
 		synchronized (textures) {
 			textures.remove(texture.getTextureID());
 		}
+	}
+
+	/**
+	 * @param texture
+	 * @return
+	 */
+	public boolean contains(Texture texture) {
+		return textures.contains(texture);
+	}
+
+	/**
+	 * @param textureID
+	 * @return
+	 */
+	public boolean containsID(int textureID) {
+		for (Texture t : textures) if (t.getTextureID() == textureID) return true;
+		return false;
+	}
+
+	public int getWidth() {
+		return this.width;
+	}
+	
+	public int getHeight() {
+		return this.height;
 	}
 	
 	

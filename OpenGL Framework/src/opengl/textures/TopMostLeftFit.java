@@ -33,12 +33,12 @@ public class TopMostLeftFit {
 	}
 	
 	public Rectangle insert(Texture tex) {
-		int x = topMostSpaceOfWidth(tex.getWidth());
-		int y = topMostFreePixel[max(topMostFreePixel, x, x+tex.getWidth())];
-		for (int i = 0; i < tex.getWidth(); i++) {
-			topMostFreePixel[x+i] = y+tex.getHeight();
+		int x = topMostSpaceOfWidth(tex.getWidth()+2);
+		int y = topMostFreePixel[max(topMostFreePixel, x, x+tex.getWidth()+2)];
+		for (int i = 0; i < tex.getWidth()+1; i++) {
+			topMostFreePixel[x+i] = y+tex.getHeight()+2;
 		}
-		return new Rectangle(x, y, tex.getWidth(), tex.getHeight());
+		return new Rectangle(x+1, y+1, tex.getWidth(), tex.getHeight());
 	}
 	
 	private int max(int[] data, int from, int to) {

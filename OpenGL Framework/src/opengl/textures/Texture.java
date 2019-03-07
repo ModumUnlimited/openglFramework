@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
  */
 public class Texture implements Comparable<Texture> {
 	
-	private static final boolean drawDebug = true;
+	private static final boolean drawDebug = false;
 	
 	private TextureAtlas atlas;
 	
@@ -78,46 +78,68 @@ public class Texture implements Comparable<Texture> {
 	public int getHeight() {
 		return height;
 	}
+
+	public double getWidthD() {
+		return (double) this.width / (double) this.atlas.getWidth();
+	}
+	
+	public double getHeightD() {
+		return (double) this.height / (double) this.atlas.getHeight();
+	}
 	
 	public Image getImage() {
 		return img;
 	}
 	
 	public double getX1d() {
-		return (double) this.getX1i() / (double) this.atlas.getSize();
+		return (double) this.getX1i() / (double) this.atlas.getWidth();
 	}
 	
 	public double getY1d() {
-		return (double) this.getY1i() / (double) this.atlas.getSize();
+		return (double) this.getY1i() / (double) this.atlas.getHeight();
 	}
 	
 	public double getX2d() {
-		return (double) this.getX2i() / (double) this.atlas.getSize();
+		return (double) this.getX2i() / (double) this.atlas.getWidth();
 	}
 	
 	public double getY2d() {
-		return (double) this.getY2i() / (double) this.atlas.getSize();
+		return (double) this.getY2i() / (double) this.atlas.getHeight();
 	}
 	
 	
 	public int getX1i() {
+		if (this.rectangle == null) {
+			atlas.createAtlas();
+		}
 		return this.rectangle.x;
 	}
 
 	public int getY1i() {
+		if (this.rectangle == null) atlas.createAtlas();
 		return this.rectangle.y;
 	}
 
 	public int getX2i() {
+		if (this.rectangle == null) atlas.createAtlas();
 		return this.rectangle.x + this.rectangle.width-1;
 	}
 
 	public int getY2i() {
+		if (this.rectangle == null) atlas.createAtlas();
 		return this.rectangle.y + this.rectangle.height-1;
 	}
 	
 	public void setRect(Rectangle rectangle) {
 		this.rectangle = rectangle;
+	}
+	
+	public void setFontBaseline(int hOffset) {
+		this.hOffset = hOffset;
+	}
+	
+	public int getFontBaseline() {
+		return this.hOffset;
 	}
 
 	/**
@@ -135,14 +157,5 @@ public class Texture implements Comparable<Texture> {
 	
 	public int compareTo(Texture o) {
 		return o.getWidth() - getWidth();
-	}
-
-	/**
-	 * @return
-	 */
-	public Texture nonRenderCopy() {
-		System.out.println("Creating alias...");
-		Texture out = new Texture(atlas, textureID, width, height, hOffset, img, toDraw, font, false, rectangle);
-		return out;
 	}
 }

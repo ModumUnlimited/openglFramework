@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import opengl.Window;
 import opengl.math.Vector2d;
+import opengl.rendering.RenderUtils;
 import opengl.textures.Texture;
 import opengl.textures.TextureAtlas;
 
@@ -52,20 +53,24 @@ public class Panel extends Container {
 		double y1 = t.getY1d();
 		double y2 = t.getY2d();
 		
+		
+		
 		glBegin(GL_QUADS);
 			glTexCoord2d(x1, y1);
-			//glColor4d(1, 0, 0, 1);
 			glVertex2f(-0.5f, 0.5f);
+			
 			glTexCoord2d(x2, y1);
-			//glColor4d(0, 1, 0, 1);
 			glVertex2f(0.5f, 0.5f);
+			
 			glTexCoord2d(x2, y2);
-			//glColor4d(0, 0, 1, 1);
 			glVertex2f(0.5f, -0.5f);
+			
 			glTexCoord2d(x1, y2);
-			//glColor4d(1, 1, 1, 1);
 			glVertex2d(-0.5f, -0.5f);
 		glEnd();
+		
+		RenderUtils.renderText(window.getWindowHandle(), "Hello There", -0.5d, 0d);
+		RenderUtils.renderTexture(window.getWindowHandle(), t, -0.5f, 0.5f, 0.5, -0.5);
 		
 	}
 

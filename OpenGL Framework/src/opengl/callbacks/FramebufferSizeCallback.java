@@ -31,6 +31,7 @@ public class FramebufferSizeCallback extends GLFWFramebufferSizeCallback {
 				glMatrixMode(GL_PROJECTION);
 				glViewport(0, 0, width, height);
 				
+				
 				glfwMakeContextCurrent(0);
 			}
 		}

@@ -25,6 +25,7 @@ public abstract class Container extends Component {
 		synchronized (children) {
 			children.add(comp);
 		}
+		comp.setWindow(this.window);
 	}
 	
 	/**

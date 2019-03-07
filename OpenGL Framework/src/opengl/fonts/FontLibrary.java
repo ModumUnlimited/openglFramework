@@ -17,7 +17,7 @@ public class FontLibrary {
 		addFont(new Font("Calibri", Font.PLAIN, 256));
 		
 		RenderUtils.setFont(activeFonts.get(0));
-		RenderUtils.setFontColor(1, 1, 1, 1);
+		RenderUtils.setColor(1, 1, 1, 1);
 		RenderUtils.setFontSize(16);
 	}
 

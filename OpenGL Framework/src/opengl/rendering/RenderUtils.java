@@ -21,7 +21,7 @@ public class RenderUtils {
 	private static float[] rgb = new float[4];
 	private static float fontSize = 16;
 	
-	public static void setFontColor(float r, float g, float b, float a) {
+	public static void setColor(float r, float g, float b, float a) {
 		rgb[0] = r;
 		rgb[1] = g;
 		rgb[2] = b;
@@ -92,6 +92,8 @@ public class RenderUtils {
 		double y2 = t.getY2d();
 		
 		glBegin(GL_QUADS);
+			glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
+			
 			glTexCoord2d(x1, y1);
 			glVertex2f(-0.5f, 0.5f);
 			

@@ -14,11 +14,11 @@ import static org.lwjgl.opengl.GL11.*;
  * @author Linus Vogel <linvogel@student.ethz.ch>
  *
  */
-public class FramebufferSizeCallback extends GLFWFramebufferSizeCallback {
+public class OpenGLFramebufferSizeCallback extends GLFWFramebufferSizeCallback {
 	
 	private final Window window;
 	
-	public FramebufferSizeCallback(Window window) {
+	public OpenGLFramebufferSizeCallback(Window window) {
 		this.window = window;
 	}
 	

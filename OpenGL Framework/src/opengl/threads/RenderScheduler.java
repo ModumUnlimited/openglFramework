@@ -54,6 +54,7 @@ public class RenderScheduler extends Thread implements Runnable {
 			window.setFontLibrary(new FontLibrary(window.getTextureAtlas()));
 			
 			window.setContentPane(new Panel(0, 0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT));
+			window.getContentPane().setWindow(window);
 			window.getTextureAtlas().createAtlas();
 			glfwMakeContextCurrent(NULL);
 		}
@@ -71,6 +72,7 @@ public class RenderScheduler extends Thread implements Runnable {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 			render();
+			
 			synchronized (Window.glfwContextLock) {
 				glfwMakeContextCurrent(window.getWindowHandle());
 				glfwSwapBuffers(window.getWindowHandle());

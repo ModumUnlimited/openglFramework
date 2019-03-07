@@ -13,7 +13,8 @@ import java.util.Date;
 
 import org.lwjgl.glfw.GLFW;
 
-import opengl.callbacks.FramebufferSizeCallback;
+import opengl.callbacks.OpenGLCursorPositionCallback;
+import opengl.callbacks.OpenGLFramebufferSizeCallback;
 import opengl.components.Panel;
 import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
@@ -55,6 +56,11 @@ public class Window {
 
 	private FontLibrary fontLibrary;
 	
+	public double mousex;
+	public double mousey;
+	public double mousedx;
+	public double mousedy;
+	
 	static {
 		System.out.println("Startup sequence: initializng GLFW...");
 		init = glfwInit();
@@ -86,7 +92,6 @@ public class Window {
 		this.ref.WINDOW_WIDTH = width;
 		this.ref.WINDOW_HEIGHT = height;
 		this.ref.WINDOW_TITLE = title;
-		glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE);
 		
 		this.maintainer = new WindowMaintainerThread(this);
 		maintainer.start();
@@ -225,7 +230,18 @@ public class Window {
 			System.exit(ERR_WINDOW_CREATE);
 		}
 		
-		glfwSetFramebufferSizeCallback(this.window, new FramebufferSizeCallback(this));
+		
+		glfwSetFramebufferSizeCallback(this.window, new OpenGLFramebufferSizeCallback(this));
+		glfwSetCursorPosCallback(this.window, new OpenGLCursorPositionCallback(this));
+		
+	}
+	
+	public double getNormalizedMouseX() {
+		return (this.mousex / ref.WINDOW_WIDTH - 0.5f) * 2;
+	}
+	
+	public double getNormalizedMouseY() {
+		return (this.mousey / ref.WINDOW_HEIGHT - 0.5f) * 2;
 	}
 
 

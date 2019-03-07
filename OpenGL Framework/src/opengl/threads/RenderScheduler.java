@@ -55,6 +55,7 @@ public class RenderScheduler extends Thread implements Runnable {
 			
 			window.setContentPane(new Panel(0, 0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT));
 			window.getTextureAtlas().createAtlas();
+			glViewport(0, window.ref.WINDOW_HEIGHT, window.ref.WINDOW_WIDTH,window.ref.WINDOW_HEIGHT);
 			glfwMakeContextCurrent(NULL);
 		}
 		

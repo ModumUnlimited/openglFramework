@@ -50,6 +50,10 @@ public class GLFont {
 		return new GLFont(this.font, this.atlas, this.glyphs, size);
 	}
 	
+	public Texture getGlyph(char c) {
+		return glyphs[c];
+	}
+	
 	public void removeFromAtlas() {
 		for (int i = 1; i < 256; i++) {
 			if (glyphs[i] != glyphs[0]) this.atlas.remove(glyphs[i]);
@@ -117,6 +121,10 @@ public class GLFont {
 		for (Texture tex : glyphs) {
 			if (tex != glyphs[0]) atlas.addTexture(tex);
 		}
+	}
+
+	public float getSize() {
+		return this.fontSize / 32;
 	}
 	
 }

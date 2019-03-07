@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import opengl.Window;
 import opengl.math.Vector2d;
+import opengl.rendering.RenderUtil;
 import opengl.textures.Texture;
 import opengl.textures.TextureAtlas;
 
@@ -66,6 +67,8 @@ public class Panel extends Container {
 			//glColor4d(1, 1, 1, 1);
 			glVertex2d(-0.5f, -0.5f);
 		glEnd();
+		
+		RenderUtil.renderText(-0.5f, 0f, window.getFontLibrary().activeFonts.get(0), "Hello World!");
 		
 	}
 

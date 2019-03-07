@@ -83,6 +83,14 @@ public class Texture implements Comparable<Texture> {
 		return img;
 	}
 	
+	public void setHOffset(int hOffset) {
+		this.hOffset = hOffset;
+	}
+	
+	public int getHOffset() {
+		return this.hOffset;
+	}
+	
 	public double getX1d() {
 		return (double) this.getX1i() / (double) this.atlas.getSize();
 	}
@@ -141,7 +149,6 @@ public class Texture implements Comparable<Texture> {
 	 * @return
 	 */
 	public Texture nonRenderCopy() {
-		System.out.println("Creating alias...");
 		Texture out = new Texture(atlas, textureID, width, height, hOffset, img, toDraw, font, false, rectangle);
 		return out;
 	}

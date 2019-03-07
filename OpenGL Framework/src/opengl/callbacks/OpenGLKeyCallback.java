@@ -1,4 +1,4 @@
-package opengl.math;
+package opengl.callbacks;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
 

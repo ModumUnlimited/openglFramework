@@ -22,6 +22,8 @@ public abstract class Component {
 	private final int id;
 	private TextureAtlas atlas = null;
 	
+	protected Window window;
+	
 	public Component() {
 		this.id = getNewID();
 	}
@@ -32,6 +34,10 @@ public abstract class Component {
 	public void setAtlas(TextureAtlas atlas) {}
 	public void setupTextures() {}
 	
+	public final void setWindow(Window window) {
+		this.window = window;
+	}
+ 	
 	public final int getID() {
 		return id;
 	}

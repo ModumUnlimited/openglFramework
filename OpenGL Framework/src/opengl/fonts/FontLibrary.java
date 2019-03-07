@@ -3,6 +3,7 @@ package opengl.fonts;
 import java.awt.Font;
 import java.util.ArrayList;
 
+import opengl.rendering.RenderUtils;
 import opengl.textures.TextureAtlas;
 
 public class FontLibrary {
@@ -13,7 +14,11 @@ public class FontLibrary {
 	
 	public FontLibrary(TextureAtlas atlas) {
 		this.atlas = atlas;
-		addFont(new Font("Calibri", Font.PLAIN, 128));
+		addFont(new Font("Calibri", Font.PLAIN, 256));
+		
+		RenderUtils.setFont(activeFonts.get(0));
+		RenderUtils.setColor(1, 1, 1, 1);
+		RenderUtils.setFontSize(16);
 	}
 
 	public GLFont addFont(Font font) {

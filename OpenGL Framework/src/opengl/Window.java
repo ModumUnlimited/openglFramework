@@ -2,16 +2,7 @@ package opengl;
 
 import static opengl.errors.Errors.ERR_GLFW_INIT;
 import static opengl.errors.Errors.ERR_WINDOW_CREATE;
-import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.io.File;
@@ -20,6 +11,10 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.lwjgl.glfw.GLFW;
+
+import opengl.callbacks.OpenGLCursorPositionCallback;
+import opengl.callbacks.OpenGLFramebufferSizeCallback;
 import opengl.components.Panel;
 import opengl.debug.Logger;
 import opengl.debug.LoggerLevel;
@@ -61,6 +56,11 @@ public class Window {
 
 	private FontLibrary fontLibrary;
 	
+	public double mousex;
+	public double mousey;
+	public double mousedx;
+	public double mousedy;
+	
 	static {
 		System.out.println("Startup sequence: initializng GLFW...");
 		init = glfwInit();
@@ -92,6 +92,7 @@ public class Window {
 		this.ref.WINDOW_WIDTH = width;
 		this.ref.WINDOW_HEIGHT = height;
 		this.ref.WINDOW_TITLE = title;
+		
 		this.maintainer = new WindowMaintainerThread(this);
 		maintainer.start();
 		Reference.windows.put(window, this);
@@ -228,6 +229,19 @@ public class Window {
 			glfwTerminate();
 			System.exit(ERR_WINDOW_CREATE);
 		}
+		
+		
+		glfwSetFramebufferSizeCallback(this.window, new OpenGLFramebufferSizeCallback(this));
+		glfwSetCursorPosCallback(this.window, new OpenGLCursorPositionCallback(this));
+		
+	}
+	
+	public double getNormalizedMouseX() {
+		return (this.mousex / ref.WINDOW_WIDTH - 0.5f) * 2;
+	}
+	
+	public double getNormalizedMouseY() {
+		return (this.mousey / ref.WINDOW_HEIGHT - 0.5f) * 2;
 	}
 
 

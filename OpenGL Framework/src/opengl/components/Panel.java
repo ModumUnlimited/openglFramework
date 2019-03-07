@@ -1,13 +1,10 @@
-/**
- * 
- */
 package opengl.components;
 
 import java.io.IOException;
 
 import opengl.Window;
 import opengl.math.Vector2d;
-import opengl.rendering.RenderUtil;
+import opengl.rendering.RenderUtils;
 import opengl.textures.Texture;
 import opengl.textures.TextureAtlas;
 
@@ -47,26 +44,16 @@ public class Panel extends Container {
 	public void renderSelf(Window window) {
 		
 		if (!atlas.isBound()) atlas.bind();
-
-		double x1 = t.getX1d();
-		double x2 = t.getX2d();
-		double y1 = t.getY1d();
-		double y2 = t.getY2d();
 		
-		glBegin(GL_QUADS);
-			glTexCoord2d(x1, y1);
-			//glColor4d(1, 0, 0, 1);
-			glVertex2f(-0.5f, 0.5f);
-			glTexCoord2d(x2, y1);
-			//glColor4d(0, 1, 0, 1);
-			glVertex2f(0.5f, 0.5f);
-			glTexCoord2d(x2, y2);
-			//glColor4d(0, 0, 1, 1);
-			glVertex2f(0.5f, -0.5f);
-			glTexCoord2d(x1, y2);
-			//glColor4d(1, 1, 1, 1);
-			glVertex2d(-0.5f, -0.5f);
-		glEnd();
+		RenderUtils.renderTexture(t);
+		
+		if (Math.abs(window.getNormalizedMouseX()) <= 0.5f && Math.abs(window.getNormalizedMouseY()) <= 0.5f) {
+			RenderUtils.setColor(0.5f, 0.5f, 1, 1);
+		} else {
+			RenderUtils.setColor(1, 1, 1, 1);
+		}
+		
+		RenderUtils.renderText(window.getWindowHandle(), "Hello There", -0.6d, -0.6d);
 		
 		RenderUtil.renderText(-0.5f, 0f, window.getFontLibrary().activeFonts.get(0), "Hello World!");
 		

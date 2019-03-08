@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.lwjgl.opengl.GL;
 
@@ -40,21 +41,28 @@ public class RenderScheduler extends Thread implements Runnable {
 		synchronized (Window.glfwContextLock) {
 			glfwMakeContextCurrent(window.getWindowHandle());
 			GL.createCapabilities();
-			glMatrixMode(GL_TEXTURE);
-			glPushMatrix();
-			glEnable(GL_ALPHA_TEST);
-			glAlphaFunc(GL_GREATER, 0.0f);
-			glEnable(GL_TEXTURE_2D);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glPopMatrix();
 			
 			glMatrixMode(GL_PROJECTION);
 			glOrtho(0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT, 0, 1, -1);
+
+			glEnable(GL_TEXTURE_2D);
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			
 			window.setTextureAtlas(new TextureAtlas(window));
 			
 			window.setFontLibrary(new FontLibrary(window.getTextureAtlas()));
+			
+			try {
+				Texture smile = new Texture("smile.png", window.getTextureAtlas());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			window.setContentPane(new Panel(-1, -1, 2, 2));
 			window.getContentPane().setWindow(window);

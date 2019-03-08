@@ -1,19 +1,18 @@
 
-import java.awt.Button;
 import java.awt.Image;
 import java.util.Comparator;
 
 import opengl.Window;
-import opengl.components.Component;
+import opengl.components.*;
 
 public class Tests {
 	
 	public static void main(String[] args) {
 		Window window = new Window("Some Title", 800, 600);
 		
-		Button btn = new Button();
+		Button btn = new Button(10, 10, 100, 100, "Hello There");
 		
-		window.getContentPane().add((Component) btn);		
+		window.getContentPane().add(btn);
 		window.show();
 
 //		for (Font s : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) System.out.println(s.getFontName());

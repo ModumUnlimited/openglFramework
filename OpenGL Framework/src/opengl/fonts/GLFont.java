@@ -10,6 +10,7 @@ import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.imageio.ImageIO;
 
@@ -131,10 +132,7 @@ public class GLFont {
 	public Texture[] getGlyphs() {
 		return glyphs;
 	}
-
-	/**
-	 * 
-	 */
+	
 	public void addToAtlas() {
 		atlas.addTexture(glyphs[0]);
 		for (Texture tex : glyphs) {

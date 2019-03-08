@@ -55,27 +55,27 @@ public class RenderUtils {
 			double tx2 = g.getX2d();
 			double ty2 = g.getY2d();
 			
-			double w = g.getWidth() * ((fontSize / 30) / wWidth[0]);
-			double h = g.getHeight() * ((fontSize / 30) / wHeight[0]);
-			double b = g.getFontBaseline() * ((fontSize / 30) / wHeight[0]);
+			double w = g.getWidth() * (fontSize / (wWidth[0] / 8));
+			double h = g.getHeight() * (fontSize / (wHeight[0] / 8));
+			double b = g.getFontBaseline() * (fontSize / ( wHeight[0] / 8));
 			
 			glBegin(GL_QUADS);
-				glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
+				glColor3f(rgb[0], rgb[1], rgb[2]);
 				//top left
 				glTexCoord2d(tx1, ty1);
-				glVertex2d(xOff + x, -(y - h + b));
+				glVertex2d(xOff + x, y - h + b);
 				
 				//top right
 				glTexCoord2d(tx2, ty1);
-				glVertex2d(xOff + x + w, -(y - h + b));
+				glVertex2d(xOff + x + w, y - h + b);
 				
 				//bottom right
 				glTexCoord2d(tx2, ty2);
-				glVertex2d(xOff + x + w, -(y + b));
+				glVertex2d(xOff + x + w, y + b);
 				
 				//bottom left
 				glTexCoord2d(tx1, ty2);
-				glVertex2d(xOff + x, -(y + b));
+				glVertex2d(xOff + x, y + b);
 				
 				glColor4f(1, 1, 1, 1);
 			glEnd();

@@ -18,7 +18,6 @@ public class Button extends Component {
 
 	@Override
 	public void render(Window window, double xOff, double yOff) {
-		super.render(window, xOff, yOff);
 		
 		if (hovered) {
 			//glColor4f(0.75f, 0.75f, 1f, 1f);

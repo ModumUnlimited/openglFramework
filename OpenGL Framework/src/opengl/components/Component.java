@@ -26,6 +26,16 @@ public abstract class Component {
 	protected Vector2d dimension;
 	
 	public Component() {
+		this(0, 0, 0, 0);
+	}
+	
+	public Component(double x, double y) {
+		this(x, y, 0, 0);
+	}
+	
+	public Component(double x, double y, double w, double h) {
+		this.position = new Vector2d(x, y);
+		this.dimension = new Vector2d(w, h);
 		this.id = getNewID();
 	}
 	

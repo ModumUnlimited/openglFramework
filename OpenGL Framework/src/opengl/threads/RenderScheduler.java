@@ -75,16 +75,14 @@ public class RenderScheduler extends Thread implements Runnable {
 			window.setContentPane(new Panel(-1, -1, 2, 2));
 			window.getContentPane().setWindow(window);
 			window.getTextureAtlas().createAtlas();
-<<<<<<< HEAD
+			
 			try {
 				smile = new Texture(new File("smile.png"), window.getTextureAtlas());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-=======
-			glViewport(0, window.ref.WINDOW_HEIGHT, window.ref.WINDOW_WIDTH,window.ref.WINDOW_HEIGHT);
+			
 			glfwSwapInterval(0);
->>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 			glfwMakeContextCurrent(NULL);
 		}
 		

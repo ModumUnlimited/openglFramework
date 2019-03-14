@@ -27,6 +27,8 @@ public class RenderScheduler extends Thread implements Runnable {
 	private int delay;
 	private long last;
 	
+	public static Texture smile;
+	
 	public RenderScheduler(Window window, int delay) {
 		this.window = window;
 		this.delay = delay;
@@ -44,21 +46,24 @@ public class RenderScheduler extends Thread implements Runnable {
 			
 			glMatrixMode(GL_PROJECTION);
 			glOrtho(0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT, 0, 1, -1);
-
+			
 			glEnable(GL_TEXTURE_2D);
-
+			
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glEnable(GL_ALPHA_TEST);
+			glAlphaFunc(GL_GREATER, 0.4f);
+			
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			
 			
 			window.setTextureAtlas(new TextureAtlas(window));
 			
 			window.setFontLibrary(new FontLibrary(window.getTextureAtlas()));
 			
 			try {
-				Texture smile = new Texture("smile.png", window.getTextureAtlas());
+				smile = new Texture("smile.png", window.getTextureAtlas());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -67,6 +72,7 @@ public class RenderScheduler extends Thread implements Runnable {
 			window.getContentPane().setWindow(window);
 			window.getTextureAtlas().createAtlas();
 			glViewport(0, window.ref.WINDOW_HEIGHT, window.ref.WINDOW_WIDTH,window.ref.WINDOW_HEIGHT);
+			glfwSwapInterval(0);
 			glfwMakeContextCurrent(NULL);
 		}
 		
@@ -76,7 +82,6 @@ public class RenderScheduler extends Thread implements Runnable {
 			window.setInit();
 			window.windowInitLock.notifyAll();
 		}
-		glfwSwapInterval(0);
 		while (!window.shouldClose()) {
 
 			glfwPollEvents();

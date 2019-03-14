@@ -4,7 +4,6 @@ import opengl.fonts.GLFont;
 import opengl.textures.Texture;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.GLFW;
@@ -18,7 +17,7 @@ import org.lwjgl.glfw.GLFW;
 public class RenderUtils {
 	
 	private static GLFont activeFont;
-	private static float[] rgb = new float[4];
+	private static final float[] rgb = new float[4];
 	private static float fontSize = 16;
 	
 	public static void setColor(float r, float g, float b, float a) {
@@ -60,7 +59,7 @@ public class RenderUtils {
 			double b = g.getFontBaseline() * (fontSize / ( wHeight[0] / 8));
 			
 			glBegin(GL_QUADS);
-				glColor3f(rgb[0], rgb[1], rgb[2]);
+				//glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
 				//top left
 				glTexCoord2d(tx1, ty1);
 				glVertex2d(xOff + x, y - h + b);
@@ -77,14 +76,14 @@ public class RenderUtils {
 				glTexCoord2d(tx1, ty2);
 				glVertex2d(xOff + x, y + b);
 				
-				glColor4f(1, 1, 1, 1);
+				//glColor4f(1, 1, 1, 1);
 			glEnd();
 			
 			xOff += w + activeFont.getPadding();
 		}
 	}
 	
-	public static void renderTexture(Texture t) {
+	public static void renderTexture(Texture t, float x, float y, float w, float h) {
 		
 		double x1 = t.getX1d();
 		double x2 = t.getX2d();
@@ -92,20 +91,19 @@ public class RenderUtils {
 		double y2 = t.getY2d();
 		
 		glBegin(GL_QUADS);
-			glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
+			//glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
 			
 			glTexCoord2d(x1, y1);
-			glVertex2f(-0.5f, 0.5f);
+			glVertex2f(x, y);
 			
 			glTexCoord2d(x2, y1);
-			glVertex2f(0.5f, 0.5f);
+			glVertex2f(x+w, y);
 			
 			glTexCoord2d(x2, y2);
-			glVertex2f(0.5f, -0.5f);
+			glVertex2f(x+w, y+h);
 			
 			glTexCoord2d(x1, y2);
-			glVertex2d(-0.5f, -0.5f);
-			glColor4f(0, 0, 0, 0);
+			glVertex2d(x, y+h);
 		glEnd();
 		
 	}

@@ -13,6 +13,7 @@ import java.util.Date;
 
 import org.lwjgl.glfw.GLFW;
 
+import opengl.callbacks.ErrorCallback;
 import opengl.callbacks.OpenGLCursorPositionCallback;
 import opengl.callbacks.OpenGLFramebufferSizeCallback;
 import opengl.components.Panel;
@@ -238,7 +239,7 @@ public class Window {
 			System.exit(ERR_WINDOW_CREATE);
 		}
 		
-		
+		glfwSetErrorCallback(new ErrorCallback(this));
 		glfwSetFramebufferSizeCallback(this.window, new OpenGLFramebufferSizeCallback(this));
 		glfwSetCursorPosCallback(this.window, new OpenGLCursorPositionCallback(this));
 		

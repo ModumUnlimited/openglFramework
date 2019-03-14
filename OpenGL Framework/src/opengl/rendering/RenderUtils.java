@@ -55,27 +55,27 @@ public class RenderUtils {
 			double tx2 = g.getX2d();
 			double ty2 = g.getY2d();
 			
-			double w = g.getWidth() * ((fontSize / 30) / wWidth[0]);
-			double h = g.getHeight() * ((fontSize / 30) / wHeight[0]);
-			double b = g.getFontBaseline() * ((fontSize / 30) / wHeight[0]);
+			double w = g.getWidth() * (fontSize * activeFont.getSizeMultiplier());
+			double h = g.getHeight() * (fontSize * activeFont.getSizeMultiplier());
+			double b = g.getFontBaseline() * (fontSize * activeFont.getSizeMultiplier());
 			
 			glBegin(GL_QUADS);
 				glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
 				//top left
 				glTexCoord2d(tx1, ty1);
-				glVertex2d(xOff + x, -(y - h + b));
+				glVertex2d(xOff + x, y - h + b);
 				
 				//top right
 				glTexCoord2d(tx2, ty1);
-				glVertex2d(xOff + x + w, -(y - h + b));
+				glVertex2d(xOff + x + w, y - h + b);
 				
 				//bottom right
 				glTexCoord2d(tx2, ty2);
-				glVertex2d(xOff + x + w, -(y + b));
+				glVertex2d(xOff + x + w, y + b);
 				
 				//bottom left
 				glTexCoord2d(tx1, ty2);
-				glVertex2d(xOff + x, -(y + b));
+				glVertex2d(xOff + x, y + b);
 				
 				glColor4f(1, 1, 1, 1);
 			glEnd();
@@ -84,7 +84,7 @@ public class RenderUtils {
 		}
 	}
 	
-	public static void renderTexture(Texture t) {
+	public static void renderTexture(Texture t, double x, double y, double w, double h) {
 		
 		double x1 = t.getX1d();
 		double x2 = t.getX2d();
@@ -95,16 +95,16 @@ public class RenderUtils {
 			glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
 			
 			glTexCoord2d(x1, y1);
-			glVertex2f(-0.5f, 0.5f);
+			glVertex2d(x, y);
 			
 			glTexCoord2d(x2, y1);
-			glVertex2f(0.5f, 0.5f);
+			glVertex2d(x+w, y);
 			
 			glTexCoord2d(x2, y2);
-			glVertex2f(0.5f, -0.5f);
+			glVertex2d(x+w, y+h);
 			
 			glTexCoord2d(x1, y2);
-			glVertex2d(-0.5f, -0.5f);
+			glVertex2d(x, y+h);
 			glColor4f(0, 0, 0, 0);
 		glEnd();
 		

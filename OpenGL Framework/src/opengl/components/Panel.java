@@ -10,6 +10,7 @@ import opengl.math.Vector2d;
 import opengl.rendering.RenderUtils;
 import opengl.textures.Texture;
 import opengl.textures.TextureAtlas;
+import opengl.threads.RenderScheduler;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -22,7 +23,6 @@ public class Panel extends Container {
 	private Vector2d position;
 	private Vector2d dimension;
 	Texture t, t1, t2, t3, t4;
-	TextureAtlas atlas;
 	
 	public Panel() {
 		this(0, 0, 0, 0);
@@ -35,33 +35,21 @@ public class Panel extends Container {
 	public Panel(double x, double y, double w, double h) {
 		position = new Vector2d(x, y);
 		dimension = new Vector2d(w, h);
-		try {
-			atlas = Window.textures;
-			t = new Texture("smile.png", atlas);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@Override
-	public void renderSelf(Window window) {
+	public void renderSelf(Window window, double xOff, double yOff) {
 		
-		if (!atlas.isBound()) atlas.bind();
+		if (!window.getTextureAtlas().isBound()) window.getTextureAtlas().bind();
 		
-		RenderUtils.renderTexture(t);
+		//RenderUtils.renderTexture(RenderScheduler.smile, 250, 250, 150, 150);
 		
-		if (Math.abs(window.getNormalizedMouseX()) <= 0.5f && Math.abs(window.getNormalizedMouseY()) <= 0.5f) {
-			RenderUtils.setColor(0.5f, 0.5f, 1, 1);
-		} else {
-			RenderUtils.setColor(1, 1, 1, 1);
-		}
-		
-		RenderUtils.renderText(window.getWindowHandle(), "Hello There", -0.6d, -0.6d);
+		RenderUtils.renderText(window.getWindowHandle(), "Hello There", 50, 50);
 		
 	}
 
 	@Override
-	public void update() {
+	public void update(Window window) {
 		
 	}
 	

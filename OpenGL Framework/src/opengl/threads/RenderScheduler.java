@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.lwjgl.opengl.GL;
 
@@ -25,6 +26,8 @@ public class RenderScheduler extends Thread implements Runnable {
 	private Window window;
 	private int delay;
 	private long last;
+	
+	public static Texture smile;
 	
 	public RenderScheduler(Window window, int delay) {
 		this.window = window;
@@ -49,6 +52,10 @@ public class RenderScheduler extends Thread implements Runnable {
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glPopMatrix();
 			
+			glMatrixMode(GL_PROJECTION);
+			glOrtho(0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT, 0, -1, 1);
+			glViewport(0, 0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT);
+			
 			window.setTextureAtlas(new TextureAtlas(window));
 			
 			window.setFontLibrary(new FontLibrary(window.getTextureAtlas()));
@@ -56,6 +63,11 @@ public class RenderScheduler extends Thread implements Runnable {
 			window.setContentPane(new Panel(0, 0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT));
 			window.getContentPane().setWindow(window);
 			window.getTextureAtlas().createAtlas();
+			try {
+				smile = new Texture(new File("smile.png"), window.getTextureAtlas());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			glfwMakeContextCurrent(NULL);
 		}
 		
@@ -87,7 +99,7 @@ public class RenderScheduler extends Thread implements Runnable {
 	public void render() {
 		synchronized (Window.glfwContextLock) {
 			glfwMakeContextCurrent(window.getWindowHandle());
-			window.getContentPane().render(window);
+			window.getContentPane().render(window, 0, 0);
 			glfwMakeContextCurrent(NULL);
 		}
 	}

@@ -45,9 +45,9 @@ public abstract class Container extends Component {
 	}
 	
 	@Override
-	public void render(Window window) {
-		renderSelf(window);
-		renderChildren(window);
+	public void render(Window window, double xOff, double yOff) {
+		renderSelf(window, xOff, yOff);
+		renderChildren(window, xOff, yOff);
 	}
 	
 	/**
@@ -55,7 +55,7 @@ public abstract class Container extends Component {
 	 * method of this container before renderChildren is called.
 	 * @param window
 	 */
-	public abstract void renderSelf(Window window);
+	public abstract void renderSelf(Window window, double xOff, double yOff);
 	
 	/**
 	 * Renders all children of this container to the specified window.
@@ -63,9 +63,9 @@ public abstract class Container extends Component {
 	 * is called.
 	 * @param window The window that should be rendered to.
 	 */
-	public void renderChildren(Window window) {
+	public void renderChildren(Window window, double xOff, double yOff) {
 		synchronized (children) {
-			for (Component c : children) c.render(window);
+			for (Component c : children) c.render(window, xOff, yOff);
 		}
 	};
 

@@ -6,6 +6,7 @@ package opengl.components;
 import static opengl.components.Component.*;
 
 import opengl.Window;
+import opengl.math.Vector2d;
 import opengl.textures.TextureAtlas;
 
 /**
@@ -20,16 +21,18 @@ public abstract class Component {
 
 	private static int components = 0;
 	private final int id;
-	private TextureAtlas atlas = null;
 	
 	protected Window window;
+	
+	protected Vector2d position;
+	protected Vector2d dimension;
 	
 	public Component() {
 		this.id = getNewID();
 	}
 	
-	public abstract void render(Window window);
-	public abstract void update();
+	public abstract void render(Window window, double xOff, double yOff);
+	public abstract void update(Window window);
 	
 	public void setAtlas(TextureAtlas atlas) {}
 	public void setupTextures() {}

@@ -3,11 +3,14 @@ import java.awt.Image;
 import java.util.Comparator;
 
 import opengl.Window;
+import opengl.components.Button;
 
 public class Tests {
 	
 	public static void main(String[] args) {
 		Window window = new Window("Some Title", 800, 600);
+		Button btn = new Button(25, 25, 50, 50, "blyat");
+		window.getContentPane().add(btn);
 		window.show();
 
 //		for (Font s : GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) System.out.println(s.getFontName());

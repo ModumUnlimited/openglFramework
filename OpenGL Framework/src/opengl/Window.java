@@ -96,6 +96,16 @@ public class Window {
 		this.maintainer = new WindowMaintainerThread(this);
 		maintainer.start();
 		Reference.windows.put(window, this);
+		
+		synchronized (windowInitLock) {
+			if (!initialized) try {
+				debug("Waiting for the Window to be fully initialized!");
+				windowInitLock.wait();
+			} catch (InterruptedException e) {
+				error("Waiting interrupted!");
+			}
+		}
+		
 		info("Successfully created Window Object!");
 	}
 	

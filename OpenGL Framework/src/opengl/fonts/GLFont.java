@@ -22,7 +22,7 @@ public class GLFont {
 	private final Font font;
 	private final TextureAtlas atlas;
 	
-	private static final float FONT_SIZE_SCALE_FACTOR = 8;
+	private static final float FONT_SIZE_SCALE_FACTOR = 1024;
 	private static final int offset = 31;
 	private static final BufferedImage sImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 	
@@ -30,7 +30,7 @@ public class GLFont {
 	
 	private Texture[] glyphs = new Texture[256];
 	private float fontSize = 16;
-	private float glyphPadding = 0.05f;
+	private float glyphPadding = 2048f;
 	
 	private float red = 0;
 	private float green = 0;
@@ -122,6 +122,8 @@ public class GLFont {
 		
 		if (c != 0) glyphs[c] = found ? new Texture(img.getSubimage(left, top, right-left, bottom-top), atlas) : glyphs[0];
 		else glyphs[c] = new Texture(img, atlas);
+		
+		
 	}
 	
 	public Texture[] getGlyphs() {

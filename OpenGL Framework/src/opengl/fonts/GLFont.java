@@ -22,7 +22,7 @@ public class GLFont {
 	private final Font font;
 	private final TextureAtlas atlas;
 	
-	private static final float FONT_SIZE_SCALE_FACTOR = 8;
+	private static final float FONT_SIZE_SCALE_FACTOR = 2048;
 	private static final int offset = 31;
 	private static final BufferedImage sImg = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 	

@@ -25,14 +25,14 @@ public class Panel extends Container {
 	
 	@Override
 	public void renderSelf(Window window, double xOff, double yOff) {
-		glColor4f(red, green, blue, alpha);
+		/*glColor4f(red, green, blue, alpha);
 		
 		glBegin(GL_QUADS);
 			glVertex2d(xOff + position.getX(), yOff + position.getY());
 			glVertex2d(xOff + position.getX() + dimension.getX(), yOff + position.getY());
 			glVertex2d(xOff + position.getX() + dimension.getX(), yOff + position.getY() + dimension.getY());
 			glVertex2d(xOff + position.getX(), yOff + position.getY() + dimension.getY());
-		glEnd();
+		glEnd();*/
 		
 	}
 

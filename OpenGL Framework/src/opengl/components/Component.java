@@ -55,14 +55,14 @@ public abstract class Component {
 	}
 	
 	public void render(Window window, double xOff, double yOff) {
-		glColor4f(red, green, blue, alpha);
+		/*glColor4f(red, green, blue, alpha);
 		
 		glBegin(GL_QUADS);
 			glVertex2d(position.getX(), position.getY());
 			glVertex2d(position.getX() + dimension.getX(), position.getY());
 			glVertex2d(position.getX() + dimension.getX(), position.getY() + dimension.getY());
 			glVertex2d(position.getX(), position.getY() + dimension.getY());
-		glEnd();
+		glEnd();*/
 	}
 	
 	public abstract void update(Window window);

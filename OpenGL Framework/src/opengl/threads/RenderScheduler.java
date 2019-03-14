@@ -60,7 +60,6 @@ public class RenderScheduler extends Thread implements Runnable {
 			try {
 				Texture smile = new Texture("smile.png", window.getTextureAtlas());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

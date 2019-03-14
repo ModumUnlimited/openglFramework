@@ -78,7 +78,6 @@ public class GLFont {
 	}
 	
 	private void setupTextures() {
-		System.out.println(Thread.currentThread().getName() + ": Setting up font textures");
 		createGlyph('\0');
 		for (char c = 31; c < 128; c++) createGlyph(c);
 		for (char c = 161; c < 256; c++) createGlyph(c);

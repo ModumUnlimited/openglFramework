@@ -1,7 +1,6 @@
 package opengl.textures;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
@@ -17,7 +16,7 @@ import javax.imageio.ImageIO;
  */
 public class Texture implements Comparable<Texture> {
 	
-	private static final boolean drawDebug = false;
+	private static final boolean drawDebug = true;
 	
 	private TextureAtlas atlas;
 	
@@ -27,14 +26,12 @@ public class Texture implements Comparable<Texture> {
 	private int height;
 	private int hOffset;
 	private Image img;
-	private String toDraw;
-	private Font font;
 	
 	private boolean render = true;
 	
 	private Rectangle rectangle;
 	
-	private Texture(TextureAtlas atlas, int textureID, int width, int height, int hOffset, Image img, String toDraw, Font font, boolean render, Rectangle rectangle) {
+	/*private Texture(TextureAtlas atlas, int textureID, int width, int height, int hOffset, Image img, String toDraw, Font font, boolean render, Rectangle rectangle) {
 		this.atlas = atlas;
 		this.textureID = textureID;
 		this.width = width;
@@ -45,7 +42,7 @@ public class Texture implements Comparable<Texture> {
 		this.font = font;
 		this.render = render;
 		this.rectangle = rectangle;
-	}
+	}*/
 	
 	public Texture(int width, int height, Image img, TextureAtlas atlas) {
 		this.width = width;
@@ -117,9 +114,7 @@ public class Texture implements Comparable<Texture> {
 	
 	
 	public int getX1i() {
-		if (this.rectangle == null) {
-			atlas.createAtlas();
-		}
+		if (this.rectangle == null) atlas.createAtlas();
 		return this.rectangle.x;
 	}
 

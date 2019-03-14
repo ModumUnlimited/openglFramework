@@ -14,8 +14,6 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Panel extends Container {
 	
-	private Vector2d position;
-	private Vector2d dimension;
 	Texture t, t1, t2, t3, t4;
 	
 	public Panel() {

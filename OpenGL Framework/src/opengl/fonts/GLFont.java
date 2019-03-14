@@ -10,6 +10,7 @@ import java.awt.font.LineMetrics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.imageio.ImageIO;
 
@@ -65,6 +66,10 @@ public class GLFont {
 		return new GLFont(this.font, this.atlas, this.glyphs, size);
 	}
 	
+	public Texture getGlyph(char c) {
+		return glyphs[c];
+	}
+	
 	public void removeFromAtlas() {
 		for (int i = 1; i < 256; i++) {
 			if (glyphs[i] != glyphs[0]) this.atlas.remove(glyphs[i]);
@@ -73,7 +78,6 @@ public class GLFont {
 	}
 	
 	private void setupTextures() {
-		System.out.println(Thread.currentThread().getName() + ": Setting up font textures");
 		createGlyph('\0');
 		for (char c = 31; c < 128; c++) createGlyph(c);
 		for (char c = 161; c < 256; c++) createGlyph(c);
@@ -129,10 +133,7 @@ public class GLFont {
 	public Texture[] getGlyphs() {
 		return glyphs;
 	}
-
-	/**
-	 * 
-	 */
+	
 	public void addToAtlas() {
 		atlas.addTexture(glyphs[0]);
 		for (Texture tex : glyphs) {

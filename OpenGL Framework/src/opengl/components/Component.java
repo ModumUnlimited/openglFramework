@@ -3,8 +3,6 @@
  */
 package opengl.components;
 
-import static opengl.components.Component.*;
-
 import opengl.Window;
 import opengl.math.Vector2d;
 import opengl.textures.TextureAtlas;

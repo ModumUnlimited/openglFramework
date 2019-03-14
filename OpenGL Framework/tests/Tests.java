@@ -3,13 +3,23 @@ import java.awt.Image;
 import java.util.Comparator;
 
 import opengl.Window;
+<<<<<<< HEAD
 import opengl.components.Button;
+=======
+import opengl.components.*;
+>>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 
 public class Tests {
 	
 	public static void main(String[] args) {
 		Window window = new Window("Some Title", 800, 600);
+<<<<<<< HEAD
 		Button btn = new Button(25, 25, 50, 50, "blyat");
+=======
+		
+		Button btn = new Button(10, 10, 100, 100, "Hello There");
+		
+>>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 		window.getContentPane().add(btn);
 		window.show();
 

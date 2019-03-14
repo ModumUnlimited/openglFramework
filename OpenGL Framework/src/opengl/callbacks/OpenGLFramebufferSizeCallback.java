@@ -29,8 +29,8 @@ public class OpenGLFramebufferSizeCallback extends GLFWFramebufferSizeCallback {
 				glfwMakeContextCurrent(window);
 				
 				glMatrixMode(GL_PROJECTION);
-				glViewport(0, 0, width, height);
 				
+				glViewport(0, 0, width, height);
 				
 				glfwMakeContextCurrent(0);
 			}

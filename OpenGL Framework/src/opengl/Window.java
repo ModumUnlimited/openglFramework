@@ -99,13 +99,12 @@ public class Window {
 		
 		synchronized (windowInitLock) {
 			if (!initialized) try {
-				debug("Waiting for the Window to be fully initialized!");
+				debug("Waiting for the Window to be initialized!");
 				windowInitLock.wait();
 			} catch (InterruptedException e) {
 				error("Waiting interrupted!");
 			}
 		}
-		
 		info("Successfully created Window Object!");
 	}
 	

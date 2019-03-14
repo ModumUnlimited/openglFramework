@@ -2,6 +2,7 @@ package opengl.textures;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.glfw.GLFW.*;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,6 +13,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+
+import org.lwjgl.opengl.GL;
 
 import opengl.Window;
 
@@ -95,10 +98,13 @@ public class TextureAtlas {
 			if (tex.getY2i() > bottom) bottom = tex.getY2i();
 		}
 		
-		atlas = new BufferedImage(right, bottom, BufferedImage.TYPE_INT_ARGB);
+		this.atlas = new BufferedImage(right, bottom, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = atlas.createGraphics();
 		g.setColor(new Color(0, 0, 0, 0));
 		g.fillRect(0, 0, right, bottom);
+		
+		this.width = this.atlas.getWidth();
+		this.height = this.atlas.getHeight();
 		
 		for (Texture tex : textures) {
 			tex.drawToAtlas(g);
@@ -116,11 +122,8 @@ public class TextureAtlas {
 		int[] rgb = new int[atlas.getWidth()*atlas.getHeight()];
 		atlas.getRGB(0, 0, atlas.getWidth(), atlas.getHeight(), rgb, 0, atlas.getWidth());
 		
-		this.width = this.atlas.getWidth();
-		this.height = this.atlas.getHeight();
-		
 		bind();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, atlas.getWidth(), atlas.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, rgb);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, atlas.getWidth(), atlas.getHeight(), 0, GL_BGRA, GL_UNSIGNED_BYTE, rgb);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		unbind();

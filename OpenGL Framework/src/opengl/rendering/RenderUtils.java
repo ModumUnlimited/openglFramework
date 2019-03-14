@@ -4,7 +4,6 @@ import opengl.fonts.GLFont;
 import opengl.textures.Texture;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.GLFW;
@@ -18,7 +17,7 @@ import org.lwjgl.glfw.GLFW;
 public class RenderUtils {
 	
 	private static GLFont activeFont;
-	private static float[] rgb = new float[4];
+	private static final float[] rgb = new float[4];
 	private static float fontSize = 16;
 	
 	public static void setColor(float r, float g, float b, float a) {
@@ -55,12 +54,18 @@ public class RenderUtils {
 			double tx2 = g.getX2d();
 			double ty2 = g.getY2d();
 			
+<<<<<<< HEAD
 			double w = g.getWidth() * (fontSize * activeFont.getSizeMultiplier());
 			double h = g.getHeight() * (fontSize * activeFont.getSizeMultiplier());
 			double b = g.getFontBaseline() * (fontSize * activeFont.getSizeMultiplier());
+=======
+			double w = g.getWidth() * (fontSize / (wWidth[0] / 8));
+			double h = g.getHeight() * (fontSize / (wHeight[0] / 8));
+			double b = g.getFontBaseline() * (fontSize / ( wHeight[0] / 8));
+>>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 			
 			glBegin(GL_QUADS);
-				glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
+				//glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
 				//top left
 				glTexCoord2d(tx1, ty1);
 				glVertex2d(xOff + x, y - h + b);
@@ -77,14 +82,18 @@ public class RenderUtils {
 				glTexCoord2d(tx1, ty2);
 				glVertex2d(xOff + x, y + b);
 				
-				glColor4f(1, 1, 1, 1);
+				//glColor4f(1, 1, 1, 1);
 			glEnd();
 			
 			xOff += w + activeFont.getPadding();
 		}
 	}
 	
+<<<<<<< HEAD
 	public static void renderTexture(Texture t, double x, double y, double w, double h) {
+=======
+	public static void renderTexture(Texture t, float x, float y, float w, float h) {
+>>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 		
 		double x1 = t.getX1d();
 		double x2 = t.getX2d();
@@ -92,20 +101,35 @@ public class RenderUtils {
 		double y2 = t.getY2d();
 		
 		glBegin(GL_QUADS);
-			glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
+			//glColor4f(rgb[0], rgb[1], rgb[2], rgb[3]);
 			
 			glTexCoord2d(x1, y1);
+<<<<<<< HEAD
 			glVertex2d(x, y);
+=======
+			glVertex2f(x, y);
+>>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 			
 			glTexCoord2d(x2, y1);
+<<<<<<< HEAD
 			glVertex2d(x+w, y);
+=======
+			glVertex2f(x+w, y);
+>>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 			
 			glTexCoord2d(x2, y2);
+<<<<<<< HEAD
 			glVertex2d(x+w, y+h);
+=======
+			glVertex2f(x+w, y+h);
+>>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 			
 			glTexCoord2d(x1, y2);
 			glVertex2d(x, y+h);
+<<<<<<< HEAD
 			glColor4f(0, 0, 0, 0);
+=======
+>>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 		glEnd();
 		
 	}

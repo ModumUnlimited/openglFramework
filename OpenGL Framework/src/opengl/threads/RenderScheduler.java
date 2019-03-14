@@ -43,14 +43,20 @@ public class RenderScheduler extends Thread implements Runnable {
 		synchronized (Window.glfwContextLock) {
 			glfwMakeContextCurrent(window.getWindowHandle());
 			GL.createCapabilities();
-			glMatrixMode(GL_TEXTURE);
-			glPushMatrix();
-			glEnable(GL_ALPHA_TEST);
-			glAlphaFunc(GL_GREATER, 0.0f);
+			
+			glMatrixMode(GL_PROJECTION);
+			glOrtho(0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT, 0, 1, -1);
+			
 			glEnable(GL_TEXTURE_2D);
+			
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glPopMatrix();
+			glEnable(GL_ALPHA_TEST);
+			glAlphaFunc(GL_GREATER, 0.4f);
+			
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			
 			
 			glMatrixMode(GL_PROJECTION);
 			glOrtho(0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT, 0, -1, 1);
@@ -60,14 +66,25 @@ public class RenderScheduler extends Thread implements Runnable {
 			
 			window.setFontLibrary(new FontLibrary(window.getTextureAtlas()));
 			
-			window.setContentPane(new Panel(0, 0, window.ref.WINDOW_WIDTH, window.ref.WINDOW_HEIGHT));
+			try {
+				smile = new Texture("smile.png", window.getTextureAtlas());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			window.setContentPane(new Panel(-1, -1, 2, 2));
 			window.getContentPane().setWindow(window);
 			window.getTextureAtlas().createAtlas();
+<<<<<<< HEAD
 			try {
 				smile = new Texture(new File("smile.png"), window.getTextureAtlas());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+=======
+			glViewport(0, window.ref.WINDOW_HEIGHT, window.ref.WINDOW_WIDTH,window.ref.WINDOW_HEIGHT);
+			glfwSwapInterval(0);
+>>>>>>> refs/remotes/origin/refactoring/rewriting_for_component_based_approach
 			glfwMakeContextCurrent(NULL);
 		}
 		
@@ -77,10 +94,10 @@ public class RenderScheduler extends Thread implements Runnable {
 			window.setInit();
 			window.windowInitLock.notifyAll();
 		}
-		glfwSwapInterval(0);
 		while (!window.shouldClose()) {
-			glfwPollEvents();
 
+			glfwPollEvents();
+			
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 			render();
@@ -90,7 +107,7 @@ public class RenderScheduler extends Thread implements Runnable {
 				glfwSwapBuffers(window.getWindowHandle());
 				glfwMakeContextCurrent(NULL);
 			}
-			ThreadUtil.sync(window, last, delay);
+			last = ThreadUtil.sync(window, last, delay);
 		}
 	}
 	
